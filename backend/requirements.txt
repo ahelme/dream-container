@@ -1,0 +1,67 @@
+# backend/requirements.txt
+# 💭 DREAM CONTAINER - Anti-Bureaucracy Backend Dependencies
+# Lightweight, modern, and powerful - just like your dreams!
+
+# 🚀 FastAPI - Modern Python web framework (transcending Flask/Django bureaucracy)
+fastapi>=0.104.0,<1.0.0
+uvicorn[standard]>=0.24.0,<1.0.0
+
+# 📊 Data handling and validation (future-proof)
+pydantic>=2.5.0,<3.0.0
+python-multipart>=0.0.6
+
+# 🌐 HTTP client for external API dreams
+requests>=2.31.0,<3.0.0
+
+# 🗄️ Database connectivity for persistent dreams
+psycopg2-binary>=2.9.7,<3.0.0
+
+# 📦 Redis for lightning-fast caching dreams
+redis>=5.0.0,<6.0.0
+
+# 🔧 Environment and configuration management
+python-dotenv>=1.0.0
+
+# 📊 System monitoring for performance dreams
+psutil>=5.9.0
+
+# 🎨 Templating (for any server-side rendering dreams)
+jinja2>=3.1.0,<4.0.0
+
+# 🔐 Security and authentication dreams (optional - uncomment as needed)
+# python-jose[cryptography]>=3.3.0,<4.0.0
+# passlib[bcrypt]>=1.7.4,<2.0.0
+
+# 📧 Email integration dreams (optional - uncomment as needed)
+# emails>=0.6.0
+# aiosmtplib>=2.0.0
+
+# 🧪 Development and testing dreams (optional - uncomment for dev)
+# pytest>=7.4.0,<8.0.0
+# pytest-asyncio>=0.21.0,<1.0.0
+# httpx>=0.25.0,<1.0.0  # For testing FastAPI apps
+
+# 🎯 Code quality dreams (optional - uncomment for dev)
+# black>=23.0.0,<24.0.0
+# isort>=5.12.0,<6.0.0
+# flake8>=6.0.0,<7.0.0
+
+# 📈 Monitoring and observability dreams (optional - uncomment for production)
+# prometheus-client>=0.17.0,<1.0.0
+# sentry-sdk[fastapi]>=1.32.0,<2.0.0
+
+# 🚀 Performance optimization dreams (optional - uncomment for production)
+# gunicorn>=21.0.0,<22.0.0  # For production deployment
+# uvloop>=0.19.0,<1.0.0     # Fast async event loop
+
+# 💾 Data serialization dreams (optional - uncomment as needed)
+# orjson>=3.9.0,<4.0.0      # Fast JSON serialization
+# msgpack>=1.0.0,<2.0.0     # Binary serialization
+
+# 🔍 Logging and debugging dreams (optional - uncomment for advanced logging)
+# structlog>=23.0.0,<24.0.0
+# rich>=13.0.0,<14.0.0      # Beautiful terminal output
+
+# 🌐 Advanced HTTP features (optional - uncomment as needed)
+# aiofiles>=23.0.0,<24.0.0  # Async file operations
+# websockets>=11.0.0,<12.0.0 # WebSocket support for real-time dreams

@@ -1,0 +1,166 @@
+# docker-compose.yml
+# 💭 DREAM CONTAINER - Multi-Service Development Environment of Your Dreams
+# Place this file in your project root directory
+
+services:
+  # 💭 Dream Container with Claude Code + MCP Tools
+  devcontainer:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    
+    container_name: ${PROJECT_NAME:-dream-project}-container
+    
+    # 💾 Persistent volumes for your development dreams
+    volumes:
+      # Project files (live sync with host for real-time dreams)
+      - .:/workspace:cached
+      
+      # Package isolation (no host pollution - keep dreams clean)
+      - dream_node_modules:/workspace/node_modules
+      - dream_python_venv:/workspace/.venv
+      - dream_pip_cache:/home/vscode/.cache/pip
+      
+      # Persistent authentication (dreams that survive rebuilds)
+      - dream_claude_config:/home/vscode/.claude
+      - dream_gh_config:/home/vscode/.config/gh
+      - dream_bash_history:/commandhistory
+      
+      # Git and SSH configuration (read-only for dream security)
+      - ~/.gitconfig:/home/vscode/.gitconfig:ro
+      - ~/.ssh:/home/vscode/.ssh:ro
+      
+    # 🌍 Environment variables for dream configuration
+    environment:
+      # Database connection for data dreams
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-dream_user}:${DB_PASSWORD:-secure_dream_2025}@db:5432/${DB_NAME:-dream_db}
+      
+      # Redis connection for caching dreams
+      REDIS_URL: redis://redis:6379
+      
+      # Service URLs (internal container networking for connected dreams)
+      API_URL: http://api:${API_PORT:-8000}
+      FRONTEND_URL: http://frontend:${FRONTEND_PORT:-3000}
+      
+      # GitHub authentication (optional - set in .env for your dreams)
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      
+      # Shell configuration for dream development
+      SHELL: /bin/zsh
+      
+    # 🔗 Network connectivity to other dream services
+    networks:
+      - dream_network
+    
+    # 📋 Service dependencies for complete dreams
+    depends_on:
+      - db
+      - redis
+      - api
+    
+    # ⚙️ Container configuration for persistent dreams
+    command: ["zsh", "-c", "sleep infinity"]
+    stdin_open: true
+    tty: true
+
+  # 🐘 PostgreSQL Database for your data dreams (stable with auto minor updates)
+  db:
+    image: postgres:16-alpine
+    container_name: ${PROJECT_NAME:-dream-project}-db
+    
+    environment:
+      POSTGRES_DB: ${DB_NAME:-dream_db}
+      POSTGRES_USER: ${DB_USER:-dream_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_dream_2025}
+      
+    volumes:
+      - dream_postgres_data:/var/lib/postgresql/data
+      
+    ports:
+    - "${DB_PORT:-5433}:5432"  # ← Use 5433 externally instead of 5432
+      
+    networks:
+      - dream_network
+
+  # 📦 Redis Cache for fast dreams
+  redis:
+    image: redis:7-alpine
+    container_name: ${PROJECT_NAME:-dream-project}-redis
+    
+    volumes:
+      - dream_redis_data:/data
+      
+    ports:
+    - "${REDIS_PORT:-6380}:6379"  # ← Use 6380 externally instead of 6379
+      
+    networks:
+      - dream_network
+
+  # 🚀 API Server for backend dreams (customize as needed)
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: ${PROJECT_NAME:-dream-project}-api
+    
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-dream_user}:${DB_PASSWORD:-secure_dream_2025}@db:5432/${DB_NAME:-dream_db}
+      REDIS_URL: redis://redis:6379
+      
+    volumes:
+      - ./backend:/app:cached
+      
+    ports:
+      - "${API_PORT:-8000}:8000"
+      
+    depends_on:
+      - db
+      - redis
+      
+    networks:
+      - dream_network
+
+  # 🌐 Frontend for your UI dreams (optional - customize as needed)
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: ${PROJECT_NAME:-dream-project}-frontend
+    
+    environment:
+      API_URL: http://api:${API_PORT:-8000}
+      
+    volumes:
+      - ./frontend:/app:cached
+      - dream_frontend_node_modules:/app/node_modules
+      
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+      
+    depends_on:
+      - api
+      
+    networks:
+      - dream_network
+
+# 🌐 Networks for connected dreams
+networks:
+  dream_network:
+    driver: bridge
+
+# 💾 Named volumes for persistent dreams
+volumes:
+  # Database storage for data dreams
+  dream_postgres_data:
+  dream_redis_data:
+  
+  # Package isolation (no host pollution - keep your dreams clean)
+  dream_node_modules:
+  dream_frontend_node_modules:
+  dream_python_venv:
+  dream_pip_cache:
+  
+  # Development tool persistence (dreams that survive rebuilds)
+  dream_claude_config:
+  dream_gh_config:
+  dream_bash_history:

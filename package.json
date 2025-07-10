@@ -1,0 +1,87 @@
+{
+  "name": "dream-container-project",
+  "version": "1.0.0",
+  "description": "A project built with Dream Container - where development dreams come true",
+  "keywords": [
+    "dream-container",
+    "devcontainer", 
+    "development",
+    "docker",
+    "vscode",
+    "claude-code",
+    "ai-development"
+  ],
+  "scripts": {
+    "dev": "echo '🚀 Add your development command here (e.g., npm run start:dev)'",
+    "build": "echo '🏗️ Add your build command here (e.g., npm run build:prod)'",
+    "test": "echo '🧪 Add your test command here (e.g., npm run test:unit)'",
+    "test:watch": "echo '👀 Add your watch test command here'",
+    "quality": "echo '✨ Add quality checks here (e.g., npm run lint && npm run format)'",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "dream": "echo '💭 Living the development dream!'",
+    "setup": "echo '🔧 Run any additional setup commands here'",
+    "clean": "echo '🧹 Add cleanup commands here'"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "eslint": "^8.55.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.0"
+  },
+  "optionalDependencies": {
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended"
+    ],
+    "env": {
+      "node": true,
+      "es2022": true
+    },
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourname/your-dream-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourname/your-dream-project/issues"
+  },
+  "homepage": "https://github.com/yourname/your-dream-project#readme",
+  "license": "MIT",
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com"
+  },
+  "contributors": [
+    {
+      "name": "Dream Container Community",
+      "url": "https://github.com/yourname/dream-container"
+    }
+  ]
+}

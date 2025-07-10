@@ -1,0 +1,170 @@
+{
+  "name": "💭 DREAM CONTAINER - Multi-Service Development Dreams",
+  
+  // 🐳 Docker Compose setup for your dreams
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  
+  // 🎯 VS Code features and extensions for dream development
+  "features": {
+    // Enhanced Git support for version control dreams
+    "ghcr.io/devcontainers/features/git:1": {},
+    
+    // Docker in Docker (for advanced containerization dreams)
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "dockerDashComposeVersion": "v2"
+    }
+  },
+  
+  // 🚀 Container runtime arguments for browser automation dreams
+  "runArgs": [
+    // Required for Puppeteer/Playwright browser automation dreams
+    "--cap-add=SYS_ADMIN",
+    "--ipc=host", 
+    "--shm-size=2gb",
+    
+    // Network capabilities for advanced development dreams
+    "--cap-add=NET_ADMIN",
+    "--cap-add=NET_RAW"
+  ],
+  
+  // 📁 Additional mounts for persistent dreams
+  "mounts": [
+    // Command history persistence for continuous dreams
+    "source=dream_bash_history,target=/commandhistory,type=volume"
+  ],
+  
+  // 🌍 Environment variables for dream configuration
+  "containerEnv": {
+    // Python environment optimization for Python dreams
+    "PYTHONUSERBASE": "/home/vscode/.local",
+    "PIP_USER": "true", 
+    "PATH": "/home/vscode/.local/bin:${containerEnv:PATH}",
+    
+    // Node.js environment optimization for web dreams
+    "NPM_CONFIG_PREFIX": "/home/vscode/.npm-global",
+    "PATH": "/home/vscode/.npm-global/bin:${containerEnv:PATH}",
+    
+    // Terminal enhancement for beautiful dreams
+    "TERM": "xterm-256color",
+    "SHELL": "/bin/zsh"
+  },
+  
+  // 🎬 Post-creation setup for automatic dream configuration
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  
+  // 👤 Default user for dream development
+  "remoteUser": "vscode",
+  
+  // 🎨 VS Code customizations for the perfect dream environment
+  "customizations": {
+    "vscode": {
+      // 🔌 Essential extensions for all your development dreams
+      "extensions": [
+        // Python development dreams
+        "ms-python.python",
+        "ms-python.vscode-pylance", 
+        "ms-python.black-formatter",
+        
+        // Web development dreams
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "HTMLHint.vscode-htmlhint",
+        "stylelint.vscode-stylelint",
+        
+        // Docker support for containerization dreams
+        "ms-azuretools.vscode-docker",
+        
+        // Git enhancements for version control dreams
+        "eamodio.gitlens",
+        
+        // JSON and YAML for configuration dreams
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-json",
+        
+        // Markdown for documentation dreams
+        "yzhang.markdown-all-in-one",
+        
+        // Database support for data dreams
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        
+        // Thunder Client for API testing dreams
+        "rangav.vscode-thunder-client"
+      ],
+      
+      // ⚙️ VS Code settings for optimal dream development
+      "settings": {
+        // Python configuration for Python dreams
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.formatting.provider": "black",
+        
+        // Editor preferences for clean dreams
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll": true
+        },
+        
+        // Terminal configuration for command-line dreams
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        },
+        
+        // File associations for dream file types
+        "files.associations": {
+          "*.env*": "dotenv",
+          "docker-compose*.yml": "yaml",
+          "Dockerfile*": "dockerfile",
+          "*.dream": "json"
+        },
+        
+        // Docker settings for containerization dreams
+        "docker.showStartPage": false,
+        
+        // Theme for beautiful dreams (optional)
+        "workbench.colorTheme": "Dark+ (default dark)",
+        
+        // Welcome message for dream developers
+        "workbench.startupEditor": "readme"
+      }
+    }
+  },
+  
+  // 🌐 Port forwarding for your development dreams
+  "forwardPorts": [
+    8000,  // API server dreams
+    3000,  // Frontend app dreams  
+    5173,  // Vite dev server dreams
+    5432,  // PostgreSQL database dreams
+    6379   // Redis cache dreams
+  ],
+  
+  // 🏷️ Port labels for clarity in your dreams
+  "portsAttributes": {
+    "8000": {
+      "label": "Dream API Server",
+      "onAutoForward": "notify"
+    },
+    "3000": {
+      "label": "Dream Frontend App", 
+      "onAutoForward": "openBrowser"
+    },
+    "5173": {
+      "label": "Dream Vite Server",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "Dream Database",
+      "onAutoForward": "ignore"
+    },
+    "6379": {
+      "label": "Dream Cache",
+      "onAutoForward": "ignore"
+    }
+  }
+}
