@@ -12,9 +12,12 @@
 *.p8
 *.p12
 *.pfx
+.secrets/
+
+# Claude Code
+CLAUDE.md
 .claude/
 .anthropic/
-.secrets/
 
 # GitHub tokens and auth
 .github_token
