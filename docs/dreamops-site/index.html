@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamOps - Transcending Development Bureaucracy</title>
+    
+    <!-- DreamOps Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💭</text></svg>">
+    
+    <!-- Tailwind CSS with Severance-inspired theming -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTMX for dynamic content -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Custom Severance-inspired Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Severance-inspired color palette
+                        'severance-blue': '#2E5266',
+                        'severance-teal': '#4A7C7D',
+                        'severance-mint': '#7DB3A8',
+                        'severance-cream': '#F5F1E8',
+                        'severance-beige': '#E8DCC0',
+                        'severance-gray': '#A8B2B8',
+                        'severance-dark': '#1A2B33',
+                        'severance-accent': '#5A9BD4',
+                        'dream-gold': '#D4AF37',
+                    },
+                    backgroundImage: {
+                        'severance-gradient': 'linear-gradient(135deg, #2E5266 0%, #4A7C7D 50%, #7DB3A8 100%)',
+                        'severance-card': 'linear-gradient(145deg, #F5F1E8 0%, #E8DCC0 100%)',
+                        'severance-dark-gradient': 'linear-gradient(135deg, #1A2B33 0%, #2E5266 100%)',
+                    },
+                    fontFamily: {
+                        'severance': ['Inter', 'system-ui', 'sans-serif'],
+                        'severance-mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow-pulse': 'glow-pulse 2s ease-in-out infinite alternate',
+                        'slide-up': 'slide-up 0.6s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Severance-inspired animations -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes glow-pulse {
+            from { box-shadow: 0 0 20px rgba(90, 155, 212, 0.4); }
+            to { box-shadow: 0 0 30px rgba(90, 155, 212, 0.8); }
+        }
+        @keyframes slide-up {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .severance-glass {
+            background: rgba(245, 241, 232, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 241, 232, 0.2);
+        }
+        
+        .severance-button {
+            background: linear-gradient(145deg, #5A9BD4, #4A7C7D);
+            transition: all 0.3s ease;
+        }
+        
+        .severance-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(90, 155, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-severance-gradient min-h-screen text-severance-cream font-severance">
+    
+    <!-- Include Sidebar Navigation -->
+    <div hx-get="/templates/partials/sidebar.html" hx-trigger="load" hx-swap="afterbegin"></div>
+    
+    <!-- Main Content -->
+    <main class="ml-0 lg:ml-64 min-h-screen">
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 50%, #7DB3A8 2px, transparent 2px), radial-gradient(circle at 80% 50%, #5A9BD4 1px, transparent 1px); background-size: 100px 100px;"></div>
+            </div>
+            
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <!-- Logo/Icon -->
+                <div class="animate-float mb-8">
+                    <div class="inline-block bg-severance-glass rounded-full p-8 animate-glow-pulse">
+                        <span class="text-9xl"><img width="300px" src="../../static/assets/img/dream_ops_claude_cloud.png"></span>
+                    </div>
+                </div>
+                
+                <!-- Main Heading -->
+                <h1 class="text-5xl lg:text-7xl font-bold mb-6 animate-slide-up" style="animation-delay: 0.2s;">
+                    <span class="bg-gradient-to-r from-severance-mint to-severance-accent bg-clip-text text-transparent">
+                        DreamOps
+                    </span>
+                </h1>
+                
+                <!-- Tagline -->
+                <p class="text-xl lg:text-2xl text-severance-gray mb-4 animate-slide-up" style="animation-delay: 0.4s;">
+                    Development tools that transcend bureaucracy
+                </p>
+                
+                <!-- Subtitle -->
+                <p class="text-lg text-severance-beige mb-12 max-w-2xl mx-auto leading-relaxed animate-slide-up" style="animation-delay: 0.6s;">
+                    Experience the future of development with our suite of anti-bureaucracy tools. 
+                    Built for dreamers who refuse to accept complexity as inevitable.
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style="animation-delay: 0.8s;">
+                    <a href="dreamcontainer.html" 
+                       class="severance-button text-severance-cream font-semibold px-8 py-4 rounded-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-3">
+                        <span class="text-xl">🐳</span>
+                        <span>DreamContainer</span>
+                    </a>
+                    <a href="dreamkit.html" 
+                       class="bg-severance-glass text-severance-mint border border-severance-mint font-semibold px-8 py-4 rounded-lg hover:bg-severance-mint hover:text-severance-dark transition-all duration-300 inline-flex items-center gap-3">
+                        <span class="text-xl">⚡</span>
+                        <span>DreamKit</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Products Section -->
+        <section class="py-20 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 text-severance-mint">
+                    Our Development Dreams
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    
+                    <!-- Dream Container Card -->
+                    <div class="severance-glass rounded-xl p-8 hover:transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="bg-severance-accent rounded-lg p-3">
+                                <span class="text-2xl">🐳</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-severance-cream">DreamContainer</h3>
+                                <p class="text-severance-gray">The devcontainer of your dreams</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-severance-beige mb-6 leading-relaxed">
+                            Multi-platform development environment with persistent authentication, 
+                            Claude Code integration, and zero-friction setup. Finally, a devcontainer 
+                            that doesn't turn into a nightmare.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-severance-blue text-severance-cream px-3 py-1 rounded-full text-sm">Docker</span>
+                            <span class="bg-severance-blue text-severance-cream px-3 py-1 rounded-full text-sm">VS Code</span>
+                            <span class="bg-severance-blue text-severance-cream px-3 py-1 rounded-full text-sm">Claude Code</span>
+                            <span class="bg-severance-blue text-severance-cream px-3 py-1 rounded-full text-sm">Multi-Platform</span>
+                        </div>
+                        
+                        <a href="dreamcontainer.html" 
+                           class="inline-flex items-center gap-2 text-severance-accent hover:text-severance-mint transition-colors">
+                            <span>Explore Dream Container</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                    
+                    <!-- DreamKit Card -->
+                    <div class="severance-glass rounded-xl p-8 hover:transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="bg-dream-gold rounded-lg p-3">
+                                <span class="text-2xl">⚡</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-severance-cream">DreamKit</h3>
+                                <p class="text-severance-gray">Anti-bureaucracy web development</p>
+                            </div>
+                        </div>
+                        
+                        <p class="text-severance-beige mb-6 leading-relaxed">
+                            HTMX + Tailwind + FastAPI starter kit. Build dynamic web applications 
+                            without React complexity. No build process, no npm hell, just pure 
+                            development dreams.
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="bg-severance-teal text-severance-cream px-3 py-1 rounded-full text-sm">HTMX</span>
+                            <span class="bg-severance-teal text-severance-cream px-3 py-1 rounded-full text-sm">Tailwind</span>
+                            <span class="bg-severance-teal text-severance-cream px-3 py-1 rounded-full text-sm">FastAPI</span>
+                            <span class="bg-severance-teal text-severance-cream px-3 py-1 rounded-full text-sm">No Build</span>
+                        </div>
+                        
+                        <a href="dreamkit.html" 
+                           class="inline-flex items-center gap-2 text-severance-accent hover:text-severance-mint transition-colors">
+                            <span>Explore DreamKit</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Philosophy Section -->
+        <section class="py-20 bg-severance-gradient">
+            <div class="container mx-auto px-6 text-center">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold mb-8 text-severance-cream">
+                        The DreamOps Philosophy
+                    </h2>
+                    
+                    <p class="text-xl text-severance-beige mb-12 leading-relaxed">
+                        We believe development should feel like magic, not bureaucracy. 
+                        Every tool we create eliminates unnecessary complexity while 
+                        maintaining professional quality and enterprise capabilities.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="text-3xl mb-4">✨</div>
+                            <h3 class="text-xl font-semibold mb-3 text-severance-cream">Zero Friction</h3>
+                            <p class="text-severance-gray">Setup in minutes, not hours. Your time is precious.</p>
+                        </div>
+                        
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="text-3xl mb-4">🎯</div>
+                            <h3 class="text-xl font-semibold mb-3 text-severance-cream">Anti-Bureaucracy</h3>
+                            <p class="text-severance-gray">Eliminate complexity. Embrace simplicity. Build dreams.</p>
+                        </div>
+                        
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="text-3xl mb-4">🚀</div>
+                            <h3 class="text-xl font-semibold mb-3 text-severance-cream">Future-Proof</h3>
+                            <p class="text-severance-gray">Built with tomorrow's best practices, available today.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="py-16 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold mb-6 text-severance-cream">
+                    Ready to transcend bureaucracy?
+                </h2>
+                <p class="text-lg text-severance-gray mb-8">
+                    Join thousands of developers who have escaped development hell.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://github.com/ahelme/dream-container" 
+                       class="severance-button text-severance-cream font-semibold px-6 py-3 rounded-lg hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2">
+                        <span>⭐</span>
+                        <span>Star on GitHub</span>
+                    </a>
+                    <a href="dreamcontainer.html" 
+                       class="bg-severance-glass text-severance-mint border border-severance-mint font-semibold px-6 py-3 rounded-lg hover:bg-severance-mint hover:text-severance-dark transition-all duration-300">
+                        Get Started
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="ml-0 lg:ml-64 bg-severance-dark py-8 border-t border-severance-blue">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-severance-gray">
+                Made with 💭 and ☕ by dreamers, for dreamers
+            </p>
+            <p class="text-severance-gray text-sm mt-2">
+                DreamOps • Transcending bureaucracy since 2025
+            </p>
+        </div>
+    </footer>
+    
+    <!-- Startup script -->
+    <script>
+        console.log('💭 DreamOps loaded successfully!');
+        console.log('✨ Welcome to the anti-bureaucracy revolution!');
+    </script>
+</body>
+</html>

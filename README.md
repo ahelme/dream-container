@@ -164,6 +164,33 @@ Ship fast, iterate faster
 
 ---
 
+## 📁 **Project Structure**
+
+Understanding what goes where in DreamContainer:
+
+	
+```	
+	dream-container/
+	├── docs/dreamops-site/            # DreamOps brochure site
+	│   	├── index.html             # Homepage
+	│   	├── getting-started.html
+	│   	├── features.html
+	│   	├── assets/
+	│   	│   ├── css/
+	│   	│   ├── js/
+	│   	│   └── img/
+	│   	└── CNAME          # For custom domain > DreamOps brochure site
+	├── frontend/              # User's actual app
+	├── backend/               # User's actual API
+	└── examples/              # Example applications
+	     ├── todo-htmx/
+	     ├── blog-htmx/
+	     └── ...
+```
+**Important:** The `docs/` directory contains the Dream Container marketing/documentation website. 
+YOUR actual application code goes in `frontend/` and `backend/`!
+
+
 ## 📚 **Dream Documentation**
 
 | 📖 **Guide** | 🎯 **Perfect For** |
