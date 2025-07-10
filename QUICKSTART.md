@@ -1,11 +1,20 @@
 ## 🚀 **Quick Start** *(2 minutes to awesome)*
 
+### **Shell Compatibility**  
+We provide two setup scripts for maximum compatibility:
+
+- **`setup-zsh.sh`**: For Zsh users (macOS default, oh-my-zsh)
+- **`setup-bash.sh`**: For Bash users (Linux default, Windows WSL)
+
+Both scripts provide identical functionality with shell-appropriate syntax and file paths.
+
+
 ### **Choose Your Setup Script:**
 
 **For Zsh users (macOS default, oh-my-zsh users):**
 ```bash
 # 1️⃣ Clone your dream environment
-git clone https://github.com/yourname/dream-container.git
+git clone https://github.com/ahelme/dream-container.git
 cd dream-container
 
 # 2️⃣ Customize (optional)
@@ -13,13 +22,13 @@ cp .env.example .env
 # Edit .env with your project details
 
 # 3️⃣ Launch your dreams 🚀
-./scripts/setup-zsh.sh
+./scripts/setup-zsh-script.sh
 ```
 
 **For Bash users (Linux default, Windows WSL):**
 ```bash
 # 1️⃣ Clone your dream environment  
-git clone https://github.com/yourname/dream-container.git
+git clone https://github.com/ahelme/dream-container.git
 cd dream-container
 
 # 2️⃣ Customize (optional)
@@ -27,7 +36,7 @@ cp .env.example .env
 # Edit .env with your project details
 
 # 3️⃣ Launch your dreams 🚀
-./scripts/setup-bash.sh
+./scripts/setup-bash-script.sh
 ```
 
 ### **4️⃣ Open in VS Code**
@@ -73,14 +82,6 @@ The setup script optionally configures Claude Code for AI-powered development:
 docker-compose exec devcontainer zsh
 claude login
 ```
-
-### **Shell Compatibility**  
-We provide two setup scripts for maximum compatibility:
-
-- **`setup-zsh.sh`**: For Zsh users (macOS default, oh-my-zsh)
-- **`setup-bash.sh`**: For Bash users (Linux default, Windows WSL)
-
-Both scripts provide identical functionality with shell-appropriate syntax and file paths.
 
 ---
 
