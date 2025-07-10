@@ -84,6 +84,7 @@ claude
 
 _Anti-Bureaucracy Architecture_
 
+```
 ├── 🤖 Dream AI Dev Container (Claude Code + MCP Tools)
 ├── 🐘 PostgreSQL Database
 ├── 📦 Cache Layer (Redis/Valkey/KeyDB)
@@ -92,6 +93,7 @@ _Anti-Bureaucracy Architecture_
 └── 🔧 Quality Tools (Black, Prettier, Tests)
 
 Notice what's missing? Webpack, Babel, build scripts, node_modules chaos!
+```
 
 ### 🤖 AI Dev Layer
 
