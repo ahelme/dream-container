@@ -7,8 +7,11 @@ FROM nginx:alpine
 # Copy static assets for your frontend dreams
 COPY static/ /usr/share/nginx/html/static/
 
-# Copy HTML templates (nginx will serve them directly)
-COPY templates/pages/ /usr/share/nginx/html/
+# Copy static HTML pages (the DreamOps website)
+COPY static/html/ /usr/share/nginx/html/
+
+# Copy HTML templates (if needed for HTMX partials)
+COPY templates/pages/ /usr/share/nginx/html/templates/
 
 # Create nginx configuration for HTMX-optimized serving
 RUN cat > /etc/nginx/conf.d/default.conf << 'EOF'
