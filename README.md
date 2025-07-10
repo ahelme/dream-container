@@ -2,7 +2,7 @@
 <img src="frontend/static/assets/img/dream_ops_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
 </div>
 
-# 💭DreamContainer™️💭 & 💭DreamKit™️💭
+# 💭DreamContainer™️💭 ...&... 💭DreamKit™️💭
 **AI-Ready Development That Dreams Are Made Of**
 
 [![GitHub Stars](https://img.shields.io/github/stars/ahelme/dream-container?style=for-the-badge&logo=github)](https://github.com/ahelme/dream-container)
