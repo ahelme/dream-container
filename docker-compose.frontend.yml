@@ -1,0 +1,89 @@
+# docker-compose/docker-compose.frontend.yml
+# 🌐 Frontend Service - UI for your application dreams
+
+services:
+  dream_frontend:
+    build:
+      context: ..
+      dockerfile: frontend/Dockerfile
+    container_name: ${PROJECT_NAME:-dream-project}_frontend
+    
+    # 🌍 Environment variables for frontend dreams
+    environment:
+      # API connection for HTMX/JavaScript
+      API_URL: http://dream_api:${API_PORT:-8000}
+      
+      # Frontend configuration
+      FRONTEND_HOST: 0.0.0.0
+      FRONTEND_PORT: 3000
+      
+      # Development settings (for any framework the user chooses)
+      NODE_ENV: ${NODE_ENV:-development}
+      
+      # Optional: Analytics and tracking
+      # VITE_ANALYTICS_ID: ${ANALYTICS_ID:-}
+      
+    # 💾 Volumes for development dreams
+    volumes:
+      - ../frontend:/app:cached
+      - dream_frontend_node_modules:/app/node_modules
+      # Static assets (if serving via nginx)
+      # - dream_static_assets:/app/dist
+      
+    # 🌐 Port mapping
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+      
+    # 🔗 Network connectivity
+    networks:
+      - dream_network
+    
+    # 📋 Service dependencies
+    depends_on:
+      dream_api:
+        condition: service_healthy
+    
+    # 🏥 Health check for reliable frontend dreams
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # 🔄 Restart policy for reliability
+    restart: unless-stopped
+    
+    # 📊 Resource limits (frontends can be resource-hungry during builds)
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+    
+    # 🛠️ Development mode settings with hot reload
+    develop:
+      watch:
+        - action: sync
+          path: ../frontend/src
+          target: /app/src
+          ignore:
+            - node_modules/
+            - dist/
+            - build/
+        - action: rebuild
+          path: ../frontend/package.json
+
+# 🌐 Networks (defined in main docker-compose.yml)
+networks:
+  dream_network:
+    external: true
+
+# 💾 Volumes (defined in main docker-compose.yml)
+volumes:
+  dream_frontend_node_modules:
+    external: true
+  # Optional: Static assets volume
+  # dream_static_assets:
+  #   external: true

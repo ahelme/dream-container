@@ -1,0 +1,94 @@
+# docker-compose/docker-compose.api.yml
+# 🚀 API Service - Backend for your application dreams
+
+services:
+  dream_api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    container_name: ${PROJECT_NAME:-dream-project}_api
+    
+    # 🌍 Environment variables for API dreams
+    environment:
+      # Database connection
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-dream_user}:${DB_PASSWORD:-secure_dream_2025}@dream_db:5432/${DB_NAME:-dream_db}
+      
+      # Cache connection
+      CACHE_URL: redis://dream_cache:6379
+      REDIS_URL: redis://dream_cache:6379
+      
+      # API configuration
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      API_WORKERS: ${API_WORKERS:-1}
+      API_RELOAD: ${API_RELOAD:-true}
+      
+      # Environment
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-true}
+      
+      # Security
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-in-production}
+      
+    # 💾 Volumes for development dreams
+    volumes:
+      - ../backend:/app:cached
+      # Optional: Shared uploads directory
+      # - dream_uploads:/app/uploads
+      
+    # 🌐 Port mapping
+    ports:
+      - "${API_PORT:-8000}:8000"
+      
+    # 🔗 Network connectivity
+    networks:
+      - dream_network
+    
+    # 📋 Service dependencies
+    depends_on:
+      dream_db:
+        condition: service_healthy
+      dream_cache:
+        condition: service_healthy
+    
+    # 🏥 Health check for reliable API dreams
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # 🔄 Restart policy for reliability
+    restart: unless-stopped
+    
+    # 📊 Resource limits (adjust based on your API needs)
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 256M
+    
+    # 🛠️ Development mode settings
+    develop:
+      watch:
+        - action: sync
+          path: ../backend
+          target: /app
+          ignore:
+            - __pycache__/
+            - "*.pyc"
+            - ".pytest_cache/"
+        - action: rebuild
+          path: ../backend/requirements.txt
+
+# 🌐 Networks (defined in main docker-compose.yml)
+networks:
+  dream_network:
+    external: true
+
+# 💾 Optional volumes for API-specific data
+# volumes:
+#   dream_uploads:
+#     external: true

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamKit - DreamOps</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💭</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Severance Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'severance-blue': '#2E5266',
+                        'severance-teal': '#4A7C7D',
+                        'severance-mint': '#7DB3A8',
+                        'severance-cream': '#F5F1E8',
+                        'severance-beige': '#E8DCC0',
+                        'severance-gray': '#A8B2B8',
+                        'severance-dark': '#1A2B33',
+                        'severance-accent': '#5A9BD4',
+                        'dream-gold': '#D4AF37',
+                    },
+                    backgroundImage: {
+                        'severance-gradient': 'linear-gradient(135deg, #2E5266 0%, #4A7C7D 50%, #7DB3A8 100%)',
+                        'severance-card': 'linear-gradient(145deg, #F5F1E8 0%, #E8DCC0 100%)',
+                        'severance-dark-gradient': 'linear-gradient(135deg, #1A2B33 0%, #2E5266 100%)',
+                    },
+                    fontFamily: {
+                        'severance': ['Inter', 'system-ui', 'sans-serif'],
+                        'severance-mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        
+        .severance-glass {
+            background: rgba(245, 241, 232, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 241, 232, 0.2);
+        }
+        
+        .code-block {
+            background: #1A2B33;
+            border: 1px solid #2E5266;
+        }
+        
+        .anti-bureaucracy-badge {
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+            to { box-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        }
+    </style>
+</head>
+<body class="bg-severance-gradient min-h-screen text-severance-cream font-severance">
+    
+    <!-- Include Sidebar -->
+    <div hx-get="/templates/partials/sidebar.html" hx-trigger="load" hx-swap="afterbegin"></div>
+    
+    <!-- Main Content -->
+    <main class="ml-0 lg:ml-64 min-h-screen">
+        
+        <!-- Hero Section -->
+        <section class="py-16 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <!-- Icon -->
+                    <div class="inline-block bg-severance-glass rounded-full p-6 mb-6">
+                        <span class="text-5xl">⚡</span>
+                    </div>
+                    
+                    <!-- Anti-Bureaucracy Badge -->
+                    <div class="inline-block anti-bureaucracy-badge text-severance-dark rounded-full px-6 py-2 font-bold text-sm mb-6">
+                        🎯 ANTI-BUREAUCRACY CERTIFIED
+                    </div>
+                    
+                    <!-- Title -->
+                    <h1 class="text-5xl font-bold mb-6">
+                        <span class="bg-gradient-to-r from-dream-gold to-severance-mint bg-clip-text text-transparent">
+                            DreamKit
+                        </span>
+                    </h1>
+                    
+                    <!-- Subtitle -->
+                    <p class="text-xl text-severance-gray mb-8">
+                        Web development that transcends React bureaucracy
+                    </p>
+                    
+                    <!-- Description -->
+                    <p class="text-lg text-severance-beige leading-relaxed mb-8 max-w-3xl mx-auto">
+                        Build dynamic web applications without JavaScript complexity. HTMX + Tailwind + FastAPI 
+                        starter kit that eliminates build processes, dependency hell, and framework wars. 
+                        <strong class="text-severance-mint">Zero bureaucracy, maximum dreams.</strong>
+                    </p>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="https://github.com/ahelme/dream-container" 
+                           class="bg-dream-gold text-severance-dark font-semibold px-8 py-4 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-3">
+                            <span>⭐</span>
+                            <span>View on GitHub</span>
+                        </a>
+                        <button onclick="showDemo()" 
+                                class="severance-glass text-severance-mint border border-severance-mint font-semibold px-8 py-4 rounded-lg hover:bg-severance-mint hover:text-severance-dark transition-all duration-300">
+                            ⚡ Live Demo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Anti-Bureaucracy Comparison -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 text-severance-cream">
+                    Escape JavaScript Bureaucracy
+                </h2>
+                
+                <div class="max-w-6xl mx-auto">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        
+                        <!-- The Bureaucracy (React/Angular/Vue) -->
+                        <div class="bg-red-900/20 border border-red-500/30 rounded-xl p-8">
+                            <h3 class="text-2xl font-bold mb-6 text-red-400 flex items-center gap-3">
+                                <span>😫</span>
+                                <span>JavaScript Bureaucracy</span>
+                            </h3>
+                            
+                            <div class="space-y-4 text-severance-beige">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>Complex build processes (webpack, vite, etc.)</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>Massive node_modules folders (500MB+)</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>State management complexity (Redux, Zustand)</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>Framework wars and constant updates</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>CSS-in-JS or Sass compilation</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>Development server configuration hell</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-red-400">❌</span>
+                                    <span>Testing framework complexity</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- The Dream (HTMX + Tailwind) -->
+                        <div class="bg-green-900/20 border border-green-500/30 rounded-xl p-8">
+                            <h3 class="text-2xl font-bold mb-6 text-green-400 flex items-center gap-3">
+                                <span>✨</span>
+                                <span>HTMX Dreams</span>
+                            </h3>
+                            
+                            <div class="space-y-4 text-severance-beige">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>Zero build process - just HTML + CSS</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>CDN-delivered libraries (KB, not MB)</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>Server-driven state (no client complexity)</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>Stable technologies with proven track records</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>Tailwind utility classes (no CSS hell)</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>Edit and refresh - instant feedback</span>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <span class="text-green-400">✅</span>
+                                    <span>Simple testing with standard tools</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Grid -->
+        <section class="py-20 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 text-severance-cream">
+                    What Makes This Kit Special
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    
+                    <!-- HTMX Power -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🔥</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">HTMX Superpowers</h3>
+                        <p class="text-severance-gray">Dynamic UIs with HTML attributes. AJAX, WebSockets, and real-time updates without writing JavaScript.</p>
+                    </div>
+                    
+                    <!-- Tailwind Beauty -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🎨</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Tailwind Excellence</h3>
+                        <p class="text-severance-gray">Beautiful, responsive designs with utility classes. No CSS files to manage or naming conventions to remember.</p>
+                    </div>
+                    
+                    <!-- FastAPI Backend -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🐍</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">FastAPI Performance</h3>
+                        <p class="text-severance-gray">Modern Python backend with automatic API docs, type validation, and async support out of the box.</p>
+                    </div>
+                    
+                    <!-- No Build Process -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🚫</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Zero Build Complexity</h3>
+                        <p class="text-severance-gray">No webpack, no babel, no bundlers. Edit your HTML and Python files, refresh your browser. That's it.</p>
+                    </div>
+                    
+                    <!-- Real-time Updates -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">⚡</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Real-time Magic</h3>
+                        <p class="text-severance-gray">Live updates, form submissions, and dynamic content loading with simple HTMX attributes.</p>
+                    </div>
+                    
+                    <!-- Database Ready -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🗄️</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Database Integration</h3>
+                        <p class="text-severance-gray">PostgreSQL and Redis included. SQLAlchemy ORM setup with migrations and connection pooling.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tech Stack -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold mb-8 text-severance-cream">
+                        The Anti-Bureaucracy Stack
+                    </h2>
+                    <p class="text-lg text-severance-gray mb-12">
+                        Carefully chosen technologies that eliminate complexity while maintaining power
+                    </p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">⚡</div>
+                            <div class="font-bold text-severance-cream">HTMX</div>
+                            <div class="text-sm text-severance-gray">HTML with superpowers</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">🎨</div>
+                            <div class="font-bold text-severance-cream">Tailwind CSS</div>
+                            <div class="text-sm text-severance-gray">Utility-first styling</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">🚀</div>
+                            <div class="font-bold text-severance-cream">FastAPI</div>
+                            <div class="text-sm text-severance-gray">Modern Python web</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">🐘</div>
+                            <div class="font-bold text-severance-cream">PostgreSQL</div>
+                            <div class="text-sm text-severance-gray">Reliable database</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">📦</div>
+                            <div class="font-bold text-severance-cream">Redis</div>
+                            <div class="text-sm text-severance-gray">Fast caching</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">🐳</div>
+                            <div class="font-bold text-severance-cream">Docker</div>
+                            <div class="text-sm text-severance-gray">Container magic</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">🌐</div>
+                            <div class="font-bold text-severance-cream">Nginx</div>
+                            <div class="text-sm text-severance-gray">Static serving</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-6 hover:scale-105 transition-transform">
+                            <div class="text-3xl mb-3">🔧</div>
+                            <div class="font-bold text-severance-cream">Alpine</div>
+                            <div class="text-sm text-severance-gray">Lightweight containers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Start -->
+        <section class="py-20 bg-severance-dark-gradient" id="demo">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-center mb-8 text-severance-cream">
+                        Get Started in 30 Seconds
+                    </h2>
+                    
+                    <div class="severance-glass rounded-xl p-8">
+                        <div class="code-block rounded-lg p-6 font-severance-mono text-sm text-severance-mint mb-6">
+# Clone the anti-bureaucracy starter<br>
+git clone https://github.com/ahelme/dream-container.git<br>
+cd dream-kit<br><br>
+
+# One command to rule them all<br>
+./scripts/setup.sh<br><br>
+
+# Open in VS Code<br>
+code .<br>
+# Select "Reopen in Container"<br><br>
+
+# Visit your anti-bureaucracy app<br>
+open http://localhost:3000
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="text-lg text-severance-gray mb-6">
+                                That's it! No npm install, no build process, no configuration hell.
+                            </p>
+                            <a href="https://github.com/ahelme/dream-container" 
+                               class="bg-dream-gold text-severance-dark font-semibold px-6 py-3 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-2">
+                                <span>⚡</span>
+                                <span>Start Building Dreams</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Live Example -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-center mb-8 text-severance-cream">
+                        See HTMX Magic in Action
+                    </h2>
+                    <p class="text-center text-severance-gray mb-12">
+                        This page itself is built with DreamKit. Test interactions using HTMX...
+                    </p>
+                    
+                    <!-- Interactive Demo -->
+                    <div class="severance-glass rounded-xl p-8">
+                        <h3 class="text-xl font-bold mb-6 text-severance-cream">Try HTMX Live</h3>
+                        
+                        <!-- Counter Demo -->
+                        <div class="space-y-6">
+                            <div class="bg-severance-dark rounded-lg p-6">
+                                <h4 class="font-semibold mb-4 text-severance-beige">Interactive Counter (No JavaScript!)</h4>
+                                <div class="flex items-center gap-4">
+                                    <button hx-post="/htmx/counter/decrement" 
+                                            hx-target="#counter-value"
+                                            hx-swap="innerHTML"
+                                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition-colors">
+                                        −
+                                    </button>
+                                    <span id="counter-value" class="text-2xl font-bold text-severance-cream min-w-[3rem] text-center">
+                                        0
+                                    </span>
+                                    <button hx-post="/htmx/counter/increment" 
+                                            hx-target="#counter-value"
+                                            hx-swap="innerHTML"
+                                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors">
+                                        +
+                                    </button>
+                                </div>
+                                <p class="text-sm text-severance-gray mt-3">
+                                    Pure HTMX magic - no React state, no JavaScript complexity
+                                </p>
+                            </div>
+                            
+                            <!-- Real-time Search Demo -->
+                            <div class="bg-severance-dark rounded-lg p-6">
+                                <h4 class="font-semibold mb-4 text-severance-beige">Real-time Search</h4>
+                                <input type="text" 
+                                       placeholder="Type to search dreams..."
+                                       hx-get="/htmx/search"
+                                       hx-trigger="input changed delay:300ms"
+                                       hx-target="#search-results"
+                                       class="w-full px-4 py-2 rounded bg-severance-glass text-severance-cream placeholder-severance-gray border border-severance-blue focus:ring-2 focus:ring-severance-accent">
+                                <div id="search-results" class="mt-4 text-severance-gray">
+                                    Start typing to see real-time HTMX search results...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="py-16 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold mb-6 text-severance-cream">
+                    Ready to Escape JavaScript Bureaucracy?
+                </h2>
+                <p class="text-lg text-severance-gray mb-8 max-w-2xl mx-auto">
+                    Join the anti-bureaucracy revolution. Build web applications that feel like magic, 
+                    not like fighting a framework.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://github.com/ahelme/dream-container" 
+                       class="bg-dream-gold text-severance-dark font-semibold px-8 py-4 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-3">
+                        <span>⚡</span>
+                        <span>Get DreamKit</span>
+                    </a>
+                    <a href="dreamcontainer.html" 
+                       class="severance-glass text-severance-mint border border-severance-mint font-semibold px-8 py-4 rounded-lg hover:bg-severance-mint hover:text-severance-dark transition-all duration-300">
+                        Explore Dream Container →
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="ml-0 lg:ml-64 bg-severance-dark py-8 border-t border-severance-blue">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-severance-gray">
+                Made with 💭 and ☕ by dreamers, for dreamers
+            </p>
+            <p class="text-severance-gray text-sm mt-2">
+                No JavaScript frameworks were harmed in the making of this page
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        function showDemo() {
+            document.getElementById('demo').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+    </script>
+</body>
+</html>

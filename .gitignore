@@ -14,7 +14,7 @@
 *.pfx
 .secrets/
 
-# Claude Code
+# CLAUDE CODE FILES // You may wish to comment out `CLAUDE.md` during development
 CLAUDE.md
 .claude/
 .anthropic/

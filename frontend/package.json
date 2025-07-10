@@ -1,0 +1,39 @@
+{
+  "name": "dream-container-frontend",
+  "version": "1.0.0",
+  "description": "💭 Dream Container - Frontend for your UI dreams (framework agnostic)",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo '🌐 Add your frontend start command here'",
+    "build": "echo '🏗️ Add your frontend build command here (if needed)'",
+    "dev": "echo '🚀 Add your development server command here'",
+    "serve": "echo '📡 Add your static server command here'"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.0",
+    "eslint": "^8.55.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "dream-container",
+    "frontend", 
+    "htmx",
+    "tailwind",
+    "anti-bureaucracy"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahelme/dream-container.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "A. Helme",
+    "email": "dev@ahelme.net"
+  }
+}

@@ -12,8 +12,6 @@
     "ai-development"
   ],
   "scripts": {
-    "dev": "echo '🚀 Add your development command here (e.g., npm run start:dev)'",
-    "build": "echo '🏗️ Add your build command here (e.g., npm run build:prod)'",
     "test": "echo '🧪 Add your test command here (e.g., npm run test:unit)'",
     "test:watch": "echo '👀 Add your watch test command here'",
     "quality": "echo '✨ Add quality checks here (e.g., npm run lint && npm run format)'",
@@ -28,14 +26,9 @@
   "devDependencies": {
     "prettier": "^3.1.0",
     "eslint": "^8.55.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0"
   },
   "dependencies": {
     "dotenv": "^16.3.0"
-  },
-  "optionalDependencies": {
-    "typescript": "^5.3.0"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -67,21 +60,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourname/your-dream-project.git"
+    "url": "git+https://github.com/ahelme/dream-container.git"
   },
   "bugs": {
-    "url": "https://github.com/yourname/your-dream-project/issues"
+    "url": "https://github.com/ahelme/dream-container/issues"
   },
-  "homepage": "https://github.com/yourname/your-dream-project#readme",
+  "homepage": "https://github.com/ahelme/dream-container#readme",
   "license": "MIT",
   "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
+    "name": "A. Helme",
+    "email": "dev@ahelme.net"
   },
   "contributors": [
     {
       "name": "Dream Container Community",
-      "url": "https://github.com/yourname/dream-container"
+      "url": "https://github.com/ahelme/dream-container"
     }
   ]
 }

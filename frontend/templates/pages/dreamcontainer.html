@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamContainer - DreamOps</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💭</text></svg>">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- Severance Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'severance-blue': '#2E5266',
+                        'severance-teal': '#4A7C7D',
+                        'severance-mint': '#7DB3A8',
+                        'severance-cream': '#F5F1E8',
+                        'severance-beige': '#E8DCC0',
+                        'severance-gray': '#A8B2B8',
+                        'severance-dark': '#1A2B33',
+                        'severance-accent': '#5A9BD4',
+                        'dream-gold': '#D4AF37',
+                    },
+                    backgroundImage: {
+                        'severance-gradient': 'linear-gradient(135deg, #2E5266 0%, #4A7C7D 50%, #7DB3A8 100%)',
+                        'severance-card': 'linear-gradient(145deg, #F5F1E8 0%, #E8DCC0 100%)',
+                        'severance-dark-gradient': 'linear-gradient(135deg, #1A2B33 0%, #2E5266 100%)',
+                    },
+                    fontFamily: {
+                        'severance': ['Inter', 'system-ui', 'sans-serif'],
+                        'severance-mono': ['JetBrains Mono', 'Monaco', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        
+        .severance-glass {
+            background: rgba(245, 241, 232, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 241, 232, 0.2);
+        }
+        
+        .code-block {
+            background: #1A2B33;
+            border: 1px solid #2E5266;
+        }
+    </style>
+</head>
+<body class="bg-severance-gradient min-h-screen text-severance-cream font-severance">
+    
+    <!-- Include Sidebar -->
+    <div hx-get="/templates/partials/sidebar.html" hx-trigger="load" hx-swap="afterbegin"></div>
+    
+    <!-- Main Content -->
+    <main class="ml-0 lg:ml-64 min-h-screen">
+        
+        <!-- Hero Section -->
+        <section class="py-16 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <!-- Icon -->
+                    <div class="inline-block bg-severance-glass rounded-full p-6 mb-6">
+                        <span class="text-5xl">🐳</span>
+                    </div>
+                    
+                    <!-- Title -->
+                    <h1 class="text-5xl font-bold mb-6">
+                        <span class="bg-gradient-to-r from-severance-accent to-severance-mint bg-clip-text text-transparent">
+                            DreamContainer
+                        </span>
+                    </h1>
+                    
+                    <!-- Subtitle -->
+                    <p class="text-xl text-severance-gray mb-8">
+                        The development environment of your dreams
+                    </p>
+                    
+                    <!-- Description -->
+                    <p class="text-lg text-severance-beige leading-relaxed mb-8 max-w-3xl mx-auto">
+                        Finally, a devcontainer that doesn't turn into a nightmare. Multi-platform support, 
+                        persistent authentication, Claude Code integration, and zero-friction setup. 
+                        Built for developers who refuse to accept complexity as inevitable.
+                    </p>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="https://github.com/ahelme/dream-container" 
+                           class="bg-severance-accent text-severance-cream font-semibold px-8 py-4 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-3">
+                            <span>⭐</span>
+                            <span>View on GitHub</span>
+                        </a>
+                        <button onclick="showQuickStart()" 
+                                class="severance-glass text-severance-mint border border-severance-mint font-semibold px-8 py-4 rounded-lg hover:bg-severance-mint hover:text-severance-dark transition-all duration-300">
+                            🚀 Quick Start
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Features Grid -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16 text-severance-cream">
+                    Why Developers Dream About This
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    
+                    <!-- Persistent Authentication -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🔐</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Persistent Authentication</h3>
+                        <p class="text-severance-gray">GitHub CLI and Git authentication that actually survives rebuilds. Login once, dream forever.</p>
+                    </div>
+                    
+                    <!-- Multi-Platform -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🌍</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">True Multi-Platform</h3>
+                        <p class="text-severance-gray">Native ARM64 and AMD64 builds. 50-80% faster than traditional setups with zero QEMU emulation.</p>
+                    </div>
+                    
+                    <!-- AI-Powered -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🤖</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">AI-Powered Development</h3>
+                        <p class="text-severance-gray">Claude Code integration out of the box. MCP tools for browser automation and testing.</p>
+                    </div>
+                    
+                    <!-- Enterprise Ready -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">🏢</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Enterprise-Ready</h3>
+                        <p class="text-severance-gray">Multi-service orchestration, security best practices, and production-like development environment.</p>
+                    </div>
+                    
+                    <!-- Lightning Fast -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">⚡</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Lightning-Fast Caching</h3>
+                        <p class="text-severance-gray">Intelligent layer caching. 10-30 second rebuilds after first run. Smart dependency management.</p>
+                    </div>
+                    
+                    <!-- Zero Friction -->
+                    <div class="severance-glass rounded-xl p-6 hover:scale-105 transition-transform duration-300">
+                        <div class="text-3xl mb-4">✨</div>
+                        <h3 class="text-xl font-bold mb-3 text-severance-cream">Zero-Friction Setup</h3>
+                        <p class="text-severance-gray">One command setup. Automatic dependency management. Works on any machine immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Start Section -->
+        <section class="py-20 bg-severance-dark-gradient" id="quick-start">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-center mb-8 text-severance-cream">
+                        Quick Start Guide
+                    </h2>
+                    <p class="text-center text-severance-gray mb-12">
+                        From zero to dream development environment in 2 minutes
+                    </p>
+                    
+                    <div class="space-y-8">
+                        <!-- Step 1 -->
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-severance-accent text-severance-cream rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-bold mb-3 text-severance-cream">Clone Your Dream Environment</h3>
+                                    <div class="code-block rounded-lg p-4 font-severance-mono text-sm text-severance-mint mb-3">
+git clone https://github.com/ahelme/dream-container.git<br>
+cd dream-container
+                                    </div>
+                                    <p class="text-severance-gray">Get the complete development environment template.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-severance-accent text-severance-cream rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-bold mb-3 text-severance-cream">Customize (Optional)</h3>
+                                    <div class="code-block rounded-lg p-4 font-severance-mono text-sm text-severance-mint mb-3">
+cp .env.example .env<br>
+# Edit .env with your project details
+                                    </div>
+                                    <p class="text-severance-gray">Configure project name, ports, and environment variables.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 -->
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-severance-accent text-severance-cream rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-bold mb-3 text-severance-cream">Launch Your Dreams</h3>
+                                    <div class="code-block rounded-lg p-4 font-severance-mono text-sm text-severance-mint mb-3">
+./scripts/setup.sh
+                                    </div>
+                                    <p class="text-severance-gray">One command builds and starts your entire development stack.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4 -->
+                        <div class="severance-glass rounded-xl p-6">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-severance-accent text-severance-cream rounded-full w-8 h-8 flex items-center justify-center font-bold">4</div>
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-bold mb-3 text-severance-cream">Open in VS Code</h3>
+                                    <div class="code-block rounded-lg p-4 font-severance-mono text-sm text-severance-mint mb-3">
+code .<br>
+# Select "Reopen in Container" when prompted
+                                    </div>
+                                    <p class="text-severance-gray">VS Code automatically detects the devcontainer configuration.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <div class="mt-12 text-center">
+                        <div class="severance-glass rounded-xl p-8 border-2 border-severance-mint">
+                            <div class="text-4xl mb-4">🎉</div>
+                            <h3 class="text-2xl font-bold mb-3 text-severance-cream">You're Living the Dream!</h3>
+                            <p class="text-severance-gray">
+                                Your complete development environment is now running with persistent authentication, 
+                                AI tools, and enterprise-grade capabilities.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tech Stack -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-4xl font-bold mb-8 text-severance-cream">
+                        Built With Modern Excellence
+                    </h2>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">🐳</div>
+                            <div class="font-semibold text-severance-cream">Docker</div>
+                            <div class="text-xs text-severance-gray">Multi-platform</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">📝</div>
+                            <div class="font-semibold text-severance-cream">VS Code</div>
+                            <div class="text-xs text-severance-gray">Devcontainer</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">🤖</div>
+                            <div class="font-semibold text-severance-cream">Claude Code</div>
+                            <div class="text-xs text-severance-gray">AI Assistant</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">🐍</div>
+                            <div class="font-semibold text-severance-cream">Python 3.12</div>
+                            <div class="text-xs text-severance-gray">Latest stable</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">🐘</div>
+                            <div class="font-semibold text-severance-cream">PostgreSQL</div>
+                            <div class="text-xs text-severance-gray">Database</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">📦</div>
+                            <div class="font-semibold text-severance-cream">Redis</div>
+                            <div class="text-xs text-severance-gray">Caching</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">🎭</div>
+                            <div class="font-semibold text-severance-cream">Puppeteer</div>
+                            <div class="text-xs text-severance-gray">Automation</div>
+                        </div>
+                        <div class="severance-glass rounded-lg p-4 hover:scale-105 transition-transform">
+                            <div class="text-2xl mb-2">🌐</div>
+                            <div class="font-semibold text-severance-cream">GitHub CLI</div>
+                            <div class="text-xs text-severance-gray">Persistent auth</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CTA Section -->
+        <section class="py-16 bg-severance-dark-gradient">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold mb-6 text-severance-cream">
+                    Ready to Make Your Development Dreams Come True?
+                </h2>
+                <p class="text-lg text-severance-gray mb-8 max-w-2xl mx-auto">
+                    Join thousands of developers who have escaped devcontainer hell. 
+                    Start with the environment of your dreams.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://github.com/ahelme/dream-container" 
+                       class="bg-severance-accent text-severance-cream font-semibold px-8 py-4 rounded-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 inline-flex items-center gap-3">
+                        <span>⭐</span>
+                        <span>Star on GitHub</span>
+                    </a>
+                    <a href="dreamkit.html" 
+                       class="severance-glass text-severance-mint border border-severance-mint font-semibold px-8 py-4 rounded-lg hover:bg-severance-mint hover:text-severance-dark transition-all duration-300">
+                        Explore DreamKit →
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="ml-0 lg:ml-64 bg-severance-dark py-8 border-t border-severance-blue">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-severance-gray">
+                Made with 💭 and ☕ by dreamers, for dreamers
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        function showQuickStart() {
+            document.getElementById('quick-start').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+    </script>
+</body>
+</html>

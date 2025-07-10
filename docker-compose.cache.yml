@@ -1,0 +1,90 @@
+# docker-compose/docker-compose.cache.yml
+# 📦 Cache Service - Redis by default, but easily configurable for other solutions
+
+services:
+  dream_cache:
+    # 🎯 Default: Redis (fast, reliable, well-supported)
+    # 🔧 Alternatives: valkey/valkey, memcached, keydb/keydb
+    image: ${CACHE_IMAGE:-redis:7-alpine}
+    container_name: ${PROJECT_NAME:-dream-project}_cache
+    
+    # ⚙️ Cache configuration
+    environment:
+      # Redis-specific settings (ignored by other cache solutions)
+      REDIS_PASSWORD: ${CACHE_PASSWORD:-}
+      REDIS_DATABASES: ${CACHE_DATABASES:-16}
+      
+    # 💾 Persistent storage for your caching dreams
+    volumes:
+      - dream_cache_data:/data
+      # Optional: Custom configuration
+      # - ./cache/redis.conf:/etc/redis/redis.conf:ro
+      
+    # 🌐 Port mapping (use non-standard port to avoid conflicts)
+    ports:
+      - "${CACHE_PORT:-6380}:6379"
+      
+    # 🔗 Network connectivity
+    networks:
+      - dream_network
+    
+    # 🏥 Health check for reliable connections
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    
+    # 🔄 Restart policy for reliability
+    restart: unless-stopped
+    
+    # 📊 Resource limits (caches should be fast and light)
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+    
+    # 🚀 Performance optimizations
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+
+# 🌐 Networks (defined in main docker-compose.yml)
+networks:
+  dream_network:
+    external: true
+
+# 💾 Volumes (defined in main docker-compose.yml)
+volumes:
+  dream_cache_data:
+    external: true
+
+# 📝 Alternative Cache Solutions (uncomment to use):
+#
+# 🔄 Valkey (Redis fork):
+# services:
+#   dream_cache:
+#     image: valkey/valkey:7-alpine
+#     # ... same configuration as Redis
+#
+# 💾 Memcached:
+# services:
+#   dream_cache:
+#     image: memcached:1-alpine
+#     command: ["memcached", "-m", "256"]
+#     ports:
+#       - "${CACHE_PORT:-11212}:11211"
+#     # No persistent volumes needed for Memcached
+#
+# ⚡ KeyDB (Multi-threaded Redis):
+# services:
+#   dream_cache:
+#     image: eqalpha/keydb:latest
+#     # ... same configuration as Redis

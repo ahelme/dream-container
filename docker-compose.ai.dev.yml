@@ -1,0 +1,94 @@
+# docker-compose/docker-compose.ai_dev.yml
+# 🤖 AI-Powered Development Container
+# Claude Code + MCP Tools + Development Environment
+
+services:
+  dream_ai_devcontainer:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    
+    container_name: ${PROJECT_NAME:-dream-project}_ai_devcontainer
+    
+    # 💾 Persistent volumes for AI-powered development dreams
+    volumes:
+      # Project files (live sync with host for real-time dreams)
+      - ..:/workspace:cached
+      
+      # Package isolation (no host pollution - keep dreams clean)
+      - dream_node_modules:/workspace/node_modules
+      - dream_python_venv:/workspace/.venv
+      - dream_pip_cache:/home/vscode/.cache/pip
+      
+      # AI & Development tool persistence (dreams that survive rebuilds)
+      - dream_claude_config:/home/vscode/.claude
+      - dream_gh_config:/home/vscode/.config/gh
+      - dream_bash_history:/commandhistory
+      
+      # Git and SSH configuration (read-only for dream security)
+      - ~/.gitconfig:/home/vscode/.gitconfig:ro
+      - ~/.ssh:/home/vscode/.ssh:ro
+      
+    # 🌍 Environment variables for AI development dreams
+    environment:
+      # Database connection for data dreams
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-dream_user}:${DB_PASSWORD:-secure_dream_2025}@dream_db:5432/${DB_NAME:-dream_db}
+      
+      # Cache connection for fast dreams
+      CACHE_URL: redis://dream_cache:6379
+      REDIS_URL: redis://dream_cache:6379
+      
+      # Service URLs (internal container networking for connected dreams)
+      API_URL: http://dream_api:${API_PORT:-8000}
+      FRONTEND_URL: http://dream_frontend:${FRONTEND_PORT:-3000}
+      
+      # GitHub authentication handled by persistent gh auth login (no tokens needed!)
+      
+      # Shell configuration for dream development
+      SHELL: /bin/zsh
+      
+      # MCP tools configuration
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome-stable
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      
+    # 🔗 Network connectivity to other dream services
+    networks:
+      - dream_network
+    
+    # 📋 Service dependencies for complete AI dreams
+    depends_on:
+      - dream_db
+      - dream_cache
+    
+    # ⚙️ Container configuration for persistent AI dreams
+    command: ["zsh", "-c", "sleep infinity"]
+    stdin_open: true
+    tty: true
+    
+    # 🎭 Browser automation capabilities (for MCP tools)
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+      - NET_RAW
+    ipc: host
+    shm_size: 2gb
+
+# 🌐 Networks (defined in main docker-compose.yml)
+networks:
+  dream_network:
+    external: true
+
+# 💾 Volumes (defined in main docker-compose.yml)  
+volumes:
+  dream_node_modules:
+    external: true
+  dream_python_venv:
+    external: true
+  dream_pip_cache:
+    external: true
+  dream_claude_config:
+    external: true
+  dream_gh_config:
+    external: true
+  dream_bash_history:
+    external: true

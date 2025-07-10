@@ -1,80 +1,76 @@
 <div align="center">
-<img src="frontend/static/assets/img/dream-container-hero.png" alt="Dream Container - Transcending bureaucracy" width="600">
+<img src="frontend/static/assets/img/dream_ops_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
 </div>
 
-# 💭 DREAM CONTAINER
-**The Development Environment of Your Dreams**
+# 💭 DreamContainer™️ & DreamKit™️
+**AI-Ready Development That Dreams Are Made Of**
 
-[![GitHub Stars](https://img.shields.io/github/stars/yourname/dream-container?style=for-the-badge&logo=github)](https://github.com/yourname/dream-container)
-[![Docker Pulls](https://img.shields.io/docker/pulls/yourname/dream-container?style=for-the-badge&logo=docker)](https://hub.docker.com/r/yourname/dream-container)
+[![GitHub Stars](https://img.shields.io/github/stars/ahelme/dream-container?style=for-the-badge&logo=github)](https://github.com/ahelme/dream-container)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ahelme/dream-container?style=for-the-badge&logo=docker)](https://hub.docker.com/r/ahelme/dream-container)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
-## ✨ **Stop Fighting Your Dev Environment. Start Dreaming.**
+This project is a two-in-one:
 
-This isn't just another devcontainer. This is the **development environment you've been dreaming of**.
+1. DreamContainer: the AI-ready fully-optimised multi-architecture .devcontainer of your dreams.
 
-### 🔥 **Persistent Authentication That Actually Works**
-- ✅ **GitHub CLI** that survives rebuilds (finally!)
-- ✅ **Git authentication** that just works
-- ✅ **SSH keys** with proper security
-- ✅ **No more re-login** after every rebuild
+2. DreamKit - FastAPI & htmx Template: the modern opinionated architecture to make your Javascript framework nightmares fade away.
 
-### 🌍 **True Multi-Platform Support**
-- ✅ **Native ARM64** builds (Apple Silicon Macs)
-- ✅ **Native AMD64** builds (Intel/AMD servers)
-- ✅ **Zero QEMU emulation** slowdown
-- ✅ **50-80% faster** than traditional setups
+## **Not just another devcontainer...**
 
-### 🤖 **AI-Powered Development Ready**
-- ✅ **Claude Code** integration out of the box
-- ✅ **MCP tools** ecosystem (Puppeteer, Playwright, Browser automation)
-- ✅ **Browser automation** ready (screenshots, testing, scraping)
-- ✅ **Cutting-edge AI** development workflow
+DreamContainer is the **AI-first development environment you've been dreaming of**.
 
-### 🏢 **Enterprise-Ready Architecture**
-- ✅ **Multi-service orchestration** (API, Database, Cache, Frontend)
-- ✅ **Proper volume management** (zero host pollution)
-- ✅ **Security best practices** (read-only mounts, isolated packages)
-- ✅ **Production-like** development environment
+### **Fully Isolated AI-Powered Development with Persistent Auth**
+- **Claude Code & Github CLI** integration out of the box
+- **MCP tools** ecosystem (Puppeteer, Playwright, Browser automation)
+- **Browser automation** ready (screenshots, testing, scraping)
+- **Security best practices** (read-only mounts, isolated packages)
+- **Production-like** development environment
+- **gh auth** survives rebuilds (no more re-login after every rebuild)
 
-### ⚡ **Zero-Friction Developer Experience**
-- ✅ **One command setup** - seriously, just one!
-- ✅ **Automatic dependency management** 
-- ✅ **Health checks included**
-- ✅ **Works on any machine** immediately
-- ✅ **Future-proof versioning** - smart updates without breaking changes
+### **Multi-Platform & Enterprise-Ready**
+- **Native ARM64** (Apple Silicon Macs) / **Native AMD64** builds (Intel/AMD servers)
+- **Zero QEMU emulation** slowdown (50-80% faster)
+- **Multi-service orchestration** (API, Database, Cache, Frontend)
+- **Proper volume management** (zero host pollution)
+
+### **Zero-Friction Developer Experience**
+- **One command setup**
+- **Automatic dependency management** 
+- **Health checks included**
+- **Works on any machine** immediately
+- **Smart versioning** security updates without breaking changes
 
 ---
 
-## 🎯 **Quick Start** *(2 minutes to awesome)*
+## **Quick Start** *(2 minutes to awesome)*
 
 ```bash
-# 1️⃣ Clone your dream environment
-git clone https://github.com/yourname/dream-container.git
+# ① Clone your dream environment
+git clone https://github.com/ahelme/dream-container.git
 cd dream-container
 
-# 2️⃣ Customize (optional)
+**Customize** (optional)
 cp .env.example .env
 # Edit .env with your project details
 
-# 3️⃣ Launch your dreams 🚀
+# ② Launch your dreams... 🚀
 ./scripts/setup.sh
 
-# 4️⃣ Open in VS Code
+# ③ (Optional) Open in VS Code 
 code .
 # Select "Reopen in Container" when prompted
 
-# 🎉 You're living the dream! Start coding immediately!
+# ④ Claude Code is installed & ready to vibe...
+claude
+> Help me build the app of my dreams!
+
+# 💭 Living the dream... start coding immediately!
 ```
 
----
+### **Dream vs Nightmare**
 
-## 🎬 **See Your Dreams Come True**
-
-### **Before vs After**
-
-| 😭 **Development Nightmare** | 💭 **Dream Container** |
+| 😭 **Development Hell** | 💭 **DreamContainer** |
 |---|---|
 | ❌ Breaks after rebuilds | ✅ Persistent authentication |
 | ❌ Slow multi-platform builds | ✅ Native ARM64 + AMD64 |
@@ -82,66 +78,87 @@ code .
 | ❌ Complex authentication setup | ✅ One-command login |
 | ❌ Hours of configuration | ✅ 2-minute setup |
 
-### **Dream Architecture**
+---
 
-```
-💭 Your Dream Development Environment
-├── 🤖 Dream Container (Claude Code + MCP Tools)
+# ** DreamKit - FastAPI & htmx Template**
+
+_Anti-Bureaucracy Architecture_
+
+├── 🤖 Dream AI Dev Container (Claude Code + MCP Tools)
 ├── 🐘 PostgreSQL Database
-├── 📦 Redis Cache  
+├── 📦 Cache Layer (Redis/Valkey/KeyDB)
 ├── 🚀 API Server (FastAPI/Express/Django)
-├── 🌐 Frontend App (React/Vue/Svelte)
-└── 🔧 Quality Tools (ESLint, Prettier, Tests)
+├── ⚡ HTMX Frontend (Zero build complexity!)
+└── 🔧 Quality Tools (Black, Prettier, Tests)
 
-💾 Persistent Dreams:
-├── 🔐 Authentication (survives rebuilds)
-├── 📦 Package Cache (lightning fast)
-├── 📚 Database Data
-└── ⚙️ Configuration
-```
+Notice what's missing? Webpack, Babel, build scripts, node_modules chaos!
+
+### 🤖 AI Dev Layer
+
+• Claude Code for AI pair programming
+• MCP tools for automation
+• Browser testing capabilities
+• Persistent authentication
+
+### ⚡️ Frontend Layer
+
+• HTMX for dynamic interactions
+• Tailwind for beautiful styling
+• No build process needed
+• Edit and refresh workflow
+
+### 🚀 Backend Layer
+
+• FastAPI for modern Python APIs
+• Automatic OpenAPI documentation
+• Type validation included
+• Async support out of the box
+
+### 🗄️ Data Layer
+
+• PostgreSQL for reliability
+• Redis for lightning-fast caching
+• Persistent volumes for data safety
+• Connection pooling configured
 
 ---
 
-## 🏆 **Why Developers Dream About This**
+## **Dream Up Your Perfect App**
 
-> *"Finally, a devcontainer that doesn't turn into a nightmare!"*  
-> **– Sarah Chen, Senior Developer**
+### 🌟 Anti-Bureaucratic Web Apps
 
-> *"Went from 3 hours of setup hell to 2 minutes of pure bliss."*  
-> **– Marcus Rodriguez, DevOps Engineer**
+Zero build complexity
 
-> *"The persistent authentication alone makes this a dream come true!"*  
-> **– Emily Zhang, Full-Stack Developer**
+• HTMX + Tailwind + FastAPI/Express backends
+• Database-driven applications &  API-first development 
+• Real-time updates without JavaScript frameworks complexity
+• HTML & Nginx for the bare essentials!
 
-> *"My team went from setup nightmares to onboarding dreams."*  
-> **– David Park, Engineering Manager**
+### 🤖 AI & ML Projects
 
----
+Claude Code ready
 
-## 🎯 **Perfect Dreams For**
+• Claude Code integration out of the box
+• Jupyter notebooks with HTMX frontends
+• Data visualization without unnecessary complexity
 
-### 🌟 **Full-Stack Web Development**
-- React/Vue/Angular + Node.js/Python/PHP backends
-- Database-driven applications
-- API-first development
+### 🏢 Enterprise Development
 
-### 🤖 **AI & Machine Learning Projects**
-- Claude Code integration
-- Jupyter notebooks ready
-- GPU support available
-- Data science workflows
+Production ready
 
-### 🏢 **Enterprise Development**
-- Microservices architecture
-- Multi-team collaboration
-- Security-focused development
-- Compliance-ready setup
+• Microservices architecture
+• Multi-team collaboration without build conflicts
+• Security-focused development
 
-### 🚀 **Startup MVPs**
-- Rapid prototyping
-- Full-stack in minutes
-- Production-ready from day one
-- Scale as you grow
+### 🚀 Startup MVPs
+
+Ship fast, iterate faster
+
+• Rapid prototyping without build tools
+• Full-stack in minutes, not hours
+• Production-grade from day one: scale as you go
+
+"The best framework is the one you don't need." - DreamOps Philosophy
 
 ---
 
@@ -158,78 +175,34 @@ code .
 
 ---
 
-## 🔧 **Ready-Made Dream Setups**
+## 🔧 **Ready-Made Dream Setups (in progress..)**
 
 Choose your dream stack and start immediately:
 
-### 🎯 **Web Application Dreams**
-- **[FastAPI + React](examples/fastapi-react/)** - Modern full-stack Python dreams
-- **[Django + Vue](examples/django-vue/)** - Traditional Python web dreams
-- **[Express + React](examples/express-react/)** - Node.js full-stack dreams
-- **[Next.js](examples/nextjs/)** - React SSR dreams
+### ⚡ **Anti-Bureaucracy Web Dreams** (Recommended!)
+- **[FastAPI + HTMX](examples/fastapi-htmx/)** - Modern Python web without frontend complexity
+- **[Django + HTMX](examples/django-htmx/)** - Traditional Python with dynamic UI magic  
+- **[Express + HTMX](examples/express-htmx/)** - Node.js backend with zero-build frontend
+- **[Pure HTML + API](examples/html-api/)** - Static HTML + Tailwind + API calls
 
 ### 🤖 **AI & Data Dreams**
 - **[Data Science](examples/data-science/)** - Jupyter + ML library dreams
 - **[AI Chatbot](examples/ai-chatbot/)** - Claude Code + LangChain dreams
 - **[Computer Vision](examples/computer-vision/)** - OpenCV + PyTorch dreams
+- **[Claude Code Playground](examples/claude-playground/)** - MCP tools sandbox
 
 ### 🏢 **Enterprise Dreams**
 - **[Microservices](examples/microservices/)** - Docker Compose + Kong dreams
 - **[GraphQL API](examples/graphql/)** - Apollo Server setup dreams
+- **[Auth + RBAC](examples/auth-rbac/)** - Security-first development
 
----
+### 🎯 **Framework Dreams** (For the build-tool lovers)
+- **[FastAPI + React](examples/fastapi-react/)** - If you enjoy bundler complexity
+- **[Vue + Express](examples/vue-express/)** - Component-based development
+- **[Next.js Full-Stack](examples/nextjs/)** - SSR with all the bells and whistles
+- **[Svelte + FastAPI](examples/svelte-fastapi/)** - Compile-time optimized
 
-## 🌟 **Dream Features Deep Dive**
-
-<details>
-<summary><strong>🔐 Persistent Authentication Magic</strong></summary>
-
-**The Nightmare:** Every devcontainer rebuild = re-authenticate everything  
-**The Dream:** Smart volume mounting + proper environment handling
-
-```yaml
-volumes:
-  # 🎯 These survive rebuilds like dreams!
-  - claude_config:/home/vscode/.claude
-  - gh_config:/home/vscode/.config/gh
-  - ~/.gitconfig:/home/vscode/.gitconfig:ro
-  - ~/.ssh:/home/vscode/.ssh:ro
-```
-
-**Result:** Login once, dream forever! 🌙
-
-</details>
-
-<details>
-<summary><strong>🌍 Multi-Platform Performance Dreams</strong></summary>
-
-**The Nightmare:** ARM64 builds are slow with QEMU emulation  
-**The Dream:** Native platform builds with BuildKit
-
-```dockerfile
-# Optimized for both ARM64 and AMD64 dreams
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/devcontainers/python:1-3.11-bookworm
-```
-
-**Result:** Native speed on Apple Silicon AND Intel! ⚡
-
-</details>
-
-<details>
-<summary><strong>🤖 AI Development Dreams</strong></summary>
-
-**What's In Your Dreams:**
-- Claude Code for AI pair programming
-- MCP Puppeteer for web automation  
-- MCP Browser Tools for debugging
-- Playwright for advanced testing
-
-**One command to start dreaming:**
-```bash
-claude "Help me build the app of my dreams"
-```
-
-</details>
+> 💡 **Dream Tip:** Start with HTMX examples for maximum anti-bureaucracy bliss! You can always add React later if your project truly needs it (spoiler: it probably doesn't!).
 
 ---
 
@@ -258,14 +231,12 @@ curl -sL https://github.com/yourname/dream-container/archive/main.tar.gz | tar -
 
 ---
 
-## 💝 **Contributing to the Dream**
-
-We love dream contributions! This template gets better with every dreamer who uses it.
+## **Contributing**
 
 - 🐛 **Found a nightmare?** [Report it](https://github.com/yourname/dream-container/issues)
 - 💡 **Have a dream idea?** [Share it](https://github.com/yourname/dream-container/discussions)  
 - 🔧 **Want to contribute?** [Join the dream team](CONTRIBUTING.md)
-- ⭐ **Love this dream?** Star it and tell your friends!
+- ⭐ **Think its dreamy?** Star it and tell your friends!
 
 ---
 
@@ -279,6 +250,10 @@ MIT License - feel free to use this for all your dreams! See [LICENSE](LICENSE) 
 
 Built with 💭 by developers who were tired of development nightmares.
 
+Credits:
+- [Aeon Helme](https://github.com/ahelme/)
+- [Claude Sonnet](https://www.anthropic.com/claude/sonnet)
+
 Special thanks to:
 - The VS Code team for making devcontainer dreams possible
 - Anthropic for Claude Code that makes AI dreams real
@@ -291,7 +266,7 @@ Special thanks to:
 
 ### 💭 **Ready to live your development dreams?**
 
-**[⭐ Star this dream](https://github.com/yourname/dream-container)** • **[📖 Read the dream docs](docs/)** • **[💬 Join dream discussions](https://github.com/yourname/dream-container/discussions)**
+**[⭐ Star this dream](https://github.com/ahelme/dream-container)** • **[📖 Read the dream docs](docs/)** • **[💬 Join dream discussions](https://github.com/ahelme/dream-container/discussions)**
 
 </div>
 

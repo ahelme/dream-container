@@ -1,0 +1,57 @@
+# docker-compose/docker-compose.db.yml
+# 🗄️ Database Service - PostgreSQL for your data dreams
+
+services:
+  dream_db:
+    image: postgres:16-alpine
+    container_name: ${PROJECT_NAME:-dream-project}_db
+    
+    # 🔐 Database configuration
+    environment:
+      POSTGRES_DB: ${DB_NAME:-dream_db}
+      POSTGRES_USER: ${DB_USER:-dream_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secure_dream_2025}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+      
+    # 💾 Persistent storage for your data dreams
+    volumes:
+      - dream_postgres_data:/var/lib/postgresql/data
+      # Optional: Custom initialization scripts
+      # - ./database/init:/docker-entrypoint-initdb.d:ro
+      
+    # 🌐 Port mapping (use non-standard port to avoid conflicts)
+    ports:
+      - "${DB_PORT:-5433}:5432"
+      
+    # 🔗 Network connectivity
+    networks:
+      - dream_network
+    
+    # 🏥 Health check for reliable connections
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-dream_user} -d ${DB_NAME:-dream_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # 🔄 Restart policy for reliability
+    restart: unless-stopped
+    
+    # 📊 Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+# 🌐 Networks (defined in main docker-compose.yml)
+networks:
+  dream_network:
+    external: true
+
+# 💾 Volumes (defined in main docker-compose.yml)
+volumes:
+  dream_postgres_data:
+    external: true
