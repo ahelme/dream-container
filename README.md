@@ -2,7 +2,7 @@
 <img src="frontend/static/assets/img/dream_ops_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
 </div>
 
-# 💭DreamContainer™️💭 ...&... 💭DreamKit™️💭
+# 💭DreamContainer™️ ...&... 💭DreamKit™️
 **AI-Ready Development That Dreams Are Made Of**
 
 [![GitHub Stars](https://img.shields.io/github/stars/ahelme/dream-container?style=for-the-badge&logo=github)](https://github.com/ahelme/dream-container)
@@ -16,83 +16,86 @@ This project is a two-in-one:
 
 2. DreamKit - FastAPI & htmx Template: the modern opinionated architecture to make your Javascript framework nightmares fade away.
 
-## **Not just another devcontainer...**
+# 💭DreamContainer™️
+
+## **Not just another .devcontainer...**
 
 DreamContainer is the **AI-first development environment you've been dreaming of**.
 
 ### **Fully Isolated AI-Powered Development with Persistent Auth**
 - **Claude Code & Github CLI** integration out of the box
-- **MCP tools** ecosystem (Puppeteer, Playwright, Browser automation)
-- **Browser automation** ready (screenshots, testing, scraping)
-- **Security best practices** (read-only mounts, isolated packages)
-- **Production-like** development environment
-- **gh auth** survives rebuilds (no more re-login after every rebuild)
+- **Ready to use MCP tools** browser-testing with Puppeteer, Playwright, BrowserTools (screenshots, testing, scraping)
+- **Smart package versioning** security updates without breaking changes
+- **Replicable Dev Environment** no "works for me"
+- **Persistent Authentication** auth survives rebuilds (no re-login after rebuilds)
 
 ### **Multi-Platform & Enterprise-Ready**
 - **Native ARM64** (Apple Silicon Macs) / **Native AMD64** builds (Intel/AMD servers)
-- **Zero QEMU emulation** slowdown (50-80% faster)
-- **Multi-service orchestration** (API, Database, Cache, Frontend)
-- **Proper volume management** (zero host pollution)
-
-### **Zero-Friction Developer Experience**
-- **One command setup**
-- **Automatic dependency management** 
+- **No QEMU emulation** slowdown (50-80% faster)
+- **Multi-service orchestration** (API, Database, Cache, Frontend, .devcontainer)
+- **Volume management** (zero host pollution)
+- **Security best practices** (read-only mounts, isolated packages)
 - **Health checks included**
-- **Works on any machine** immediately
-- **Smart versioning** security updates without breaking changes
-
----
 
 ## **Quick Start** *(2 minutes to awesome)*
 
 ```bash
-# ① Clone your dream environment
+# 💾 Clone your dream environment...
 git clone https://github.com/ahelme/dream-container.git
 cd dream-container
 
-**Customize** (optional)
+# 🖌️ (Optional) Customize...
 cp .env.example .env
 # Edit .env with your project details
 
-# ② Launch your dreams... 🚀
+# 🚀 Launch your dreams... 
 ./scripts/setup.sh
 
-# ③ (Optional) Open in VS Code 
-code .
-# Select "Reopen in Container" when prompted
-
-# ④ Claude Code is installed & ready to vibe...
+# 🤖 Claude Code is installed & ready to vibe...
 claude
 > Help me build the app of my dreams!
+
+# 🧑🏼‍💻 Or Open in VS Code...
+code .
+# Select "Reopen in Container" when prompted...
 
 # 💭 Living the dream... start coding immediately!
 ```
 
 ### **Dream vs Nightmare**
 
-| 😭 **Development Hell** | 💭 **DreamContainer** |
+| **DreamContainer** | **Locally-run AI Code Agents** |  
 |---|---|
-| ❌ Breaks after rebuilds | ✅ Persistent authentication |
-| ❌ Slow multi-platform builds | ✅ Native ARM64 + AMD64 |
-| ❌ Host dependency pollution | ✅ Perfect isolation |
-| ❌ Complex authentication setup | ✅ One-command login |
-| ❌ Hours of configuration | ✅ 2-minute setup |
+| ✅ Container isolation | ❌ Local filesystem access |
+| ✅ Security-first AI dev | ❌ AI mission-drift / local filesystem corruption |
+| ✅ Containerized package installs | ❌ Host dependency pollution |
+
+
+| **DreamContainer** | **DIY Dev Container Config** |  
+|---|---|
+| ✅ 2-minute setup | ❌ Hours of configuration |
+| ✅ One-command login | ❌ Custom caching/DinD setup |
+| ✅ Persistent authentication | ❌ Breaks after rebuilds | 
+| ✅ Native ARM64 + AMD64 | ❌ Slow QEMU emulation |
+
 
 ---
 
-# ** DreamKit - FastAPI & htmx Template**
+# 💭DreamKit - FastAPI & htmx Template
 
 _Anti-Bureaucracy Architecture_
 
 ```
-├── 🤖 Dream AI Dev Container (Claude Code + MCP Tools)
-├── 🐘 PostgreSQL Database
-├── 📦 Cache Layer (Redis/Valkey/KeyDB)
-├── 🚀 API Server (FastAPI/Express/Django)
-├── ⚡ HTMX Frontend (Zero build complexity!)
-└── 🔧 Quality Tools (Black, Prettier, Tests)
+├── 🤖 Secure AI Engineering with 💭Dream Container: _Claude Code + MCP Tools (swap coder/tools as eco-system evolves)_
+├── ⚡ HTMX Frontend: Modern, fast, intuitive frontend _(you'll wonder why you ever bothered with React)_
+├── 🐘 Database: PostgreSQL _(swap → db of choice)_
+├── 📦 Cache Layer: Redis _(swap → e.g. Valkey/KeyDB)_
+├── 🚀 API Server: FastAPI _(swap → e.g. Express/Django)_
+├── 🔧 Quality Tools: Black, Prettier, html linting
+└── 🌎 Simple Webserver: HTML & Nginx (for when all you need is the web)
 
-Notice what's missing? Webpack, Babel, build scripts, node_modules chaos!
+...what's missing? VirtualDOM, Vite, Webpack, Babel, and hundreds of node_modules...
+
 ```
 
 ### 🤖 AI Dev Layer
@@ -104,10 +107,10 @@ Notice what's missing? Webpack, Babel, build scripts, node_modules chaos!
 
 ### ⚡️ Frontend Layer
 
-• HTMX for dynamic interactions
-• Tailwind for beautiful styling
-• No build process needed
-• Edit and refresh workflow
+• HTMX provides dynamic interactions & realtime updates
+• Tailwind for simple styling
+• Vastly reduced package management & migration
+• Easy edit > refresh workflow
 
 ### 🚀 Backend Layer
 
@@ -125,7 +128,7 @@ Notice what's missing? Webpack, Babel, build scripts, node_modules chaos!
 
 ---
 
-## **Dream Up Your Perfect App**
+## **Dream Your Perfect App**
 
 ### 🌟 Anti-Bureaucratic Web Apps
 
@@ -134,7 +137,6 @@ Zero build complexity
 • HTMX + Tailwind + FastAPI/Express backends
 • Database-driven applications &  API-first development 
 • Real-time updates without JavaScript frameworks complexity
-• HTML & Nginx for the bare essentials!
 
 ### 🤖 AI & ML Projects
 
@@ -169,7 +171,7 @@ Ship fast, iterate faster
 Understanding what goes where in DreamContainer:
 
 	
-```	
+```
 	dream-container/
 	├── docs/dreamops-site/            # DreamOps brochure site
 	│   	├── index.html             # Homepage
@@ -187,6 +189,7 @@ Understanding what goes where in DreamContainer:
 	     ├── blog-htmx/
 	     └── ...
 ```
+
 **Important:** The `docs/` directory contains the Dream Container marketing/documentation website. 
 YOUR actual application code goes in `frontend/` and `backend/`!
 
