@@ -371,17 +371,19 @@ just connects out directly.
   vault. (Placeholder *substitution* would not work for git — the dummy is
   invisible inside base64 — so use the `basic` auth rule, not substitutions.)
   Git needs no credentials configured at all.
-- **⚠️ Per-agent credential mapping is NOT yet verified** (review finding #4,
-  blocking for M2). The tested rule maps *upstream host → one credential*, so
-  as described every agent proxying to `github.com` would get the *same*
-  injected PAT — collapsing the §5 per-agent write tiers into one identity.
-  agent-vault has per-container **vault-scoped session tokens** and
-  multi-tenancy that should allow distinct credentials per agent, but that
-  the single verified rule does *not* demonstrate. **Before M2: prove one
-  agent-vault instance can inject different GitHub credentials for different
-  container session tokens.** Until then, per-agent GitHub scoping relies on
-  the PAT delivered directly to the container (broker path, §6), not the
-  proxy.
+- **Per-agent credential mapping: verified working** (2026-08-03,
+  empirically — closes review finding #4). The unit of credential scoping is
+  the **vault**: service rules and credentials are per-vault, and session
+  tokens are vault-scoped. So the pattern is **one vault per agent** (or per
+  project): each vault carries its own `GH_PAT` credential and its own
+  service rule for the same upstream host. Test: two vaults, two session
+  tokens, identical `git ls-remote` against the same host through one
+  agent-vault instance → the upstream received *different* credentials per
+  token. `dream new` therefore provisions a vault + session token per agent,
+  and the §5 per-agent write tiers survive transit through the proxy intact.
+  (This is agent-vault's own vault config — the optional Infisical backing
+  store syncs the credential *values*; the per-vault mapping lives in
+  agent-vault either way.)
 - Containers trust the proxy CA (`agent-vault ca` export; `GIT_SSL_CAINFO` /
   system trust store).
 - `unmatched_host_policy=deny` doubles as the **egress allowlist** — the
@@ -537,6 +539,7 @@ not silence:
 | 19 | Instructions installed at provision from protected repo (option B, default) | standard `~/.claude` load paths; no env-var machinery; snapshot-at-start containment |
 | 20 | `DOCKER-USER` chain for interim egress rules | ufw is bypassed by Docker's NAT; DOCKER-USER is the chain Docker honours |
 | 21 | Stitched session log becomes a CI artifact in git mode | no agent ever writes the combined view; hooks path baked in image for local mode |
+| 22 | One agent-vault vault per agent | vault-scoped tokens select per-vault creds for the same host — verified 2026-08-03; closes finding #4 |
 
 ## 14. Adversarial review ledger (2026-08-02)
 
@@ -548,7 +551,7 @@ security story rested on unstated assumptions. Status of each finding:
 | 1 | HIGH | `HTTPS_PROXY` advisory → agent bypasses egress/exfil controls | **Fixed**: §2 hard requirement + compose `internal:true` note + interim host firewall |
 | 2 | HIGH | `/team` rw + `--add-dir` = review-bypassing injection channel | **Fixed in code + doc**: wrapper `--add-dir`s read-only tiers only; `/team` via `additionalDirectories` (file access only); entrypoint seeds it |
 | 3 | HIGH | systemd-creds "machine-bound" only with TPM | **Fixed**: §6 caveat + `has-tpm2` check |
-| 4 | HIGH | agent-vault host-rule → one PAT for all agents, collapses tiers | **Open, flagged blocking for M2**: verify per-container credential mapping before relying on the proxy for per-agent scoping |
+| 4 | HIGH | agent-vault host-rule → one PAT for all agents, collapses tiers | **Resolved by test 2026-08-03**: one vault per agent; vault-scoped session tokens select per-vault credentials for the same host (verified with two vaults / two tokens / one instance) |
 | 5 | HIGH | "nothing to exfiltrate" defends theft not abuse | **Fixed**: §7 reworded (exfiltration ≠ abuse) + scopes/logs/rate-limits |
 | 6 | MED | persistent `~/.claude` = Anthropic tokens in-container | **Fixed**: §7 honest note + API-key-via-vault option |
 | 7 | MED | coach reads untrusted input while holding merge cred | **Fixed**: §5 vault-scoped cred + human-visible merge delay |
@@ -561,8 +564,8 @@ security story rested on unstated assumptions. Status of each finding:
 | 14 | LOW | git attribution forgeable; one account = one identity | **Fixed**: §5 "evidence not authentication" note |
 | 15 | LOW | GHCR rejects fine-grained PATs; "weekly patch" overclaim | **Fixed**: §4 public-image / classic-PAT + "patched at refresh" |
 
-Findings 1–3, 5–15 addressed in this commit. **Finding 4 is the one open
-blocker**: it needs an empirical test (distinct GitHub credentials per
-container session token through one agent-vault) before M2 leans on the proxy
-for per-agent write-tier enforcement — until then, per-agent GitHub scoping
-comes from the broker-delivered PAT, not the proxy.
+All 15 findings are now addressed; finding #4 — the last open blocker — was
+resolved empirically on 2026-08-03 (per-vault credential selection through
+one agent-vault instance, distinct credentials per session token verified
+against a mock upstream). M2 may lean on the proxy for per-agent write-tier
+enforcement, using one vault per agent.
