@@ -23,6 +23,9 @@ services:
       NODE_OPTIONS: "--max-old-space-size=${AGENT_NODE_HEAP_MB:-2048}"
       GIT_USER_NAME: ${GIT_USER_NAME:-}
       GIT_USER_EMAIL: ${GIT_USER_EMAIL:-}
+      # Instruction tier installed into ~/.claude at container start (§4 B)
+      TEAM_INSTRUCTIONS_REPO: ${TEAM_INSTRUCTIONS_REPO:-}
+      TEAM_INSTRUCTIONS_REF: ${TEAM_INSTRUCTIONS_REF:-main}
       # GitHub auth, token-first (fine-grained PAT scoped to THIS project's
       # repos — or a placeholder value when the credential proxy is on).
       GH_TOKEN: ${GH_TOKEN:-}

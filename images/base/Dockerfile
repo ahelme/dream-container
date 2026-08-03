@@ -65,7 +65,13 @@ ENV CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 \
     PATH=/opt/npm-global/bin:$PATH
 COPY claude-wrapper.sh /usr/local/bin/claude
 COPY entrypoint.sh /usr/local/bin/dream-entrypoint
-RUN chmod 755 /usr/local/bin/claude /usr/local/bin/dream-entrypoint \
+# System-wide git hooks path: chains any per-repo hook, then auto-restitches
+# the team session log after commits touching session-logs/** (zero per-clone
+# setup; repos setting their own core.hooksPath are unaffected).
+COPY git-hooks/ /etc/dream/git-hooks/
+RUN git config --system core.hooksPath /etc/dream/git-hooks \
+    && chmod -R 755 /etc/dream/git-hooks \
+    && chmod 755 /usr/local/bin/claude /usr/local/bin/dream-entrypoint \
     && mkdir -p /workspace /team /team-system /run/secrets \
     && chown agent:agent /workspace /team /team-system \
     && mkdir -p /home/agent/.claude /home/agent/.config/gh \

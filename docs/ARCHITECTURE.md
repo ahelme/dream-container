@@ -63,6 +63,26 @@ Consequences:
   optimization. (Enforced from milestone 2, when those sidecars exist; until
   then a host nftables/ufw rule on the agent subnet is the interim control.)
 
+  **How the firewall is actually implemented**, in order of strength:
+
+  1. **`internal: true` on the agent network** (M2 target). Docker attaches
+     no NAT/masquerade to an internal bridge — agent containers simply have
+     no route out. Cross-zone services (credential proxy, deployer webhook,
+     Mattermost, and a DNS/forward-proxy for any allowed plain fetches) are
+     **dual-homed**: attached to both the internal agent network and an
+     egress-capable network. They become the only doors, by topology rather
+     than by rule.
+  2. **Host `DOCKER-USER` chain rules** (interim, M1). Docker's own iptables
+     rules bypass ufw's INPUT chain, so ordinary `ufw deny` does **not**
+     govern container egress — rules must go in the `DOCKER-USER` chain
+     (or its nftables equivalent), which Docker guarantees to consult:
+     drop traffic *from* the `dream-agents` subnet except to the proxy's
+     address and the explicit allowlist (GitHub, Anthropic). A ~20-line
+     idempotent script owns this chain; it ships with the M2 deployer kit.
+  3. What does **not** work: `HTTPS_PROXY` alone (advisory), ufw alone
+     (bypassed by Docker's NAT), or per-container `cap_drop` (limits
+     privilege, not routing).
+
 > **⚠️ One box, one trust level.** This architecture assumes the host serves
 > a single trust level. Running production workloads on the same box as
 > semi-trusted agents means a container escape lands in production. The
@@ -130,13 +150,37 @@ depth-counting is gone.
 
 ### Baked-in launch semantics
 
-The image's entrypoint exports `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`
-and the `claude` launch wrapper always passes `--add-dir` for the
-**read-only, PR-gated instruction tiers only** (`/team-system`,
-`/team-skills`). **There is no bare-launch path**: the docs-verified
-requirement (both the env var *and* `--add-dir` are needed for shared
-CLAUDE.md loading) is satisfied by construction. The container *is* the
-launch alias.
+Two delivery mechanisms for the team's instruction tier, both baked into the
+image; **B is the recommended default**:
+
+**Option B — provision-time install (recommended).** Set
+`TEAM_INSTRUCTIONS_REPO` (+ optional pinned `TEAM_INSTRUCTIONS_REF`) and the
+entrypoint clones that repo at container start and installs its `CLAUDE.md`,
+`skills/`, and `hooks/` into Claude Code's **standard user-level load paths**
+(`~/.claude/CLAUDE.md`, `~/.claude/skills/`, `~/.claude/hooks/`). Properties:
+
+- **No `--add-dir`, no env-var machinery** — bare `claude` just works via
+  paths Claude Code always loads. The env-var ambiguity (settings-json `env`
+  timing) disappears entirely.
+- **Snapshot-at-start**: a running session's instructions are immutable — a
+  freshly merged change (legitimate *or* poisoned) affects no live session;
+  it lands at the next container start / `dream refresh`. This adds a natural
+  containment window on top of the coach's merge delay.
+- The instructions repo is the protected tier: **agents hold a read-only
+  PAT** for it; skill changes arrive as coach-merged PRs, code (hooks)
+  changes as human-merged PRs — one repo can carry both, or split
+  skills/system as in §5.
+- The agent *can* edit its own installed copy in `~/.claude` — that's the
+  sanctioned "improve your own skill mid-session" loop (§5), scoped to
+  itself, and reset to the reviewed state on next provision.
+
+**Option A — live mounts (`--add-dir`).** The launch wrapper also passes
+`--add-dir` for the read-only mounted tiers (`/team-system`, `/team-skills`)
+when present, with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` exported
+by the image (docs-verified: both are required for CLAUDE.md loading from
+added dirs). Use when you want live-reload of skills without restarts.
+**There is no bare-launch path** either way. The container *is* the launch
+alias.
 
 > **⚠️ Never `--add-dir /team` (review finding #2).** `--add-dir` loads
 > `CLAUDE.md`, skills, and rules *as instructions*. The teams repo is
@@ -234,6 +278,19 @@ Rationale:
   files bearing your name; shared files are append-only or generated.*
   (Session logs: per-agent files + generated combined view — see the
   dream-teams `team-log` PR.)
+- **`team-log` activation** is layered, manual-first: (1) the
+  `update-session-log` / `new-identity` skills run it explicitly after
+  writing (works today, filesystem or git mode); (2) *zero-setup local
+  automation* — the DreamContainer image sets
+  `git config --global core.hooksPath /etc/dream/git-hooks` with a
+  post-commit hook that runs `team-log` whenever `session-logs/**` changed,
+  so no per-clone hook install is ever needed; (3) *git-mode end state* — a
+  tiny GitHub Action on the teams repo, triggered by pushes touching
+  `session-logs/**`, regenerates and commits `all-teams-session-log.md`
+  centrally. (3) is the cleanest: the stitched view becomes a CI-built
+  artifact **no agent ever writes**, so it can't conflict and can't lie
+  about its sources. (Server-side git hooks aren't available on github.com —
+  the Action is the server-side hook.)
 - **Migration path:** GitHub App instead of PATs (installation tokens expire
   in 1 h, scoped at mint time; the App private key lives host-side in the
   broker). Gotcha: installation tokens don't work for ghcr.io.
@@ -477,6 +534,9 @@ not silence:
 | 16 | Env var + `--add-dir` baked into image | docs-verified requirement; no bare-launch path |
 | 17 | `--add-dir` ONLY read-only tiers; `/team` = additionalDirectories | file-access-only mount can't inject instructions (finding #2) |
 | 18 | Agent network `internal: true` + egress firewall | HTTPS_PROXY is advisory; L3 block is what makes §7 true (finding #1) |
+| 19 | Instructions installed at provision from protected repo (option B, default) | standard `~/.claude` load paths; no env-var machinery; snapshot-at-start containment |
+| 20 | `DOCKER-USER` chain for interim egress rules | ufw is bypassed by Docker's NAT; DOCKER-USER is the chain Docker honours |
+| 21 | Stitched session log becomes a CI artifact in git mode | no agent ever writes the combined view; hooks path baked in image for local mode |
 
 ## 14. Adversarial review ledger (2026-08-02)
 

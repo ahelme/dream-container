@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# DreamContainer system-wide post-commit hook (core.hooksPath).
+#
+# 1. CHAIN: always run the repo's own .git/hooks/post-commit first if present
+#    (a system hooksPath would otherwise silently disable per-repo hooks).
+#    Repos that set their own core.hooksPath (husky etc.) never reach this
+#    file at all — per-repo config wins over system config.
+# 2. TEAM-LOG: if this commit touched session-logs/**, restitch the combined
+#    all-teams-session-log.md so the generated view never goes stale.
+set -u
+
+# NOTE: must be --git-dir, NOT --git-path hooks/… — the latter resolves
+# through core.hooksPath and would make this hook invoke ITSELF forever.
+repo_hook="$(git rev-parse --git-dir 2>/dev/null)/hooks/post-commit"
+if [[ -x "$repo_hook" && "$repo_hook" != "${BASH_SOURCE[0]}" ]]; then
+  "$repo_hook" "$@" || true
+fi
+
+if git diff-tree --no-commit-id --name-only -r HEAD 2>/dev/null | grep -q '^.*session-logs/'; then
+  for tl in \
+    "$(git rev-parse --show-toplevel 2>/dev/null)/.claude/agent_tools/bin/team-log" \
+    "$(git rev-parse --show-toplevel 2>/dev/null)/agent_tools/bin/team-log"; do
+    if [[ -x "$tl" ]]; then
+      "$tl" || true
+      break
+    fi
+  done
+fi
+
+exit 0
