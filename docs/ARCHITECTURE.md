@@ -151,9 +151,9 @@ depth-counting is gone.
 ### Baked-in launch semantics
 
 Two delivery mechanisms for the team's instruction tier, both baked into the
-image; **B is the recommended default**:
+image; **A is the recommended default**:
 
-**Option B — provision-time install (recommended).** Set
+**Option A — provision-time install (recommended).** Set
 `TEAM_INSTRUCTIONS_REPO` (+ optional pinned `TEAM_INSTRUCTIONS_REF`) and the
 entrypoint clones that repo at container start and installs its `CLAUDE.md`,
 `skills/`, and `hooks/` into Claude Code's **standard user-level load paths**
@@ -174,7 +174,7 @@ entrypoint clones that repo at container start and installs its `CLAUDE.md`,
   sanctioned "improve your own skill mid-session" loop (§5), scoped to
   itself, and reset to the reviewed state on next provision.
 
-**Option A — live mounts (`--add-dir`).** The launch wrapper also passes
+**Option B — live mounts (`--add-dir`).** The launch wrapper also passes
 `--add-dir` for the read-only mounted tiers (`/team-system`, `/team-skills`)
 when present, with `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` exported
 by the image (docs-verified: both are required for CLAUDE.md loading from
@@ -290,7 +290,8 @@ Rationale:
   centrally. (3) is the cleanest: the stitched view becomes a CI-built
   artifact **no agent ever writes**, so it can't conflict and can't lie
   about its sources. (Server-side git hooks aren't available on github.com —
-  the Action is the server-side hook.)
+  the Action is the server-side hook. It ships in dream-teams as
+  `.github/workflows/stitch-session-log.yml`.)
 - **Migration path:** GitHub App instead of PATs (installation tokens expire
   in 1 h, scoped at mint time; the App private key lives host-side in the
   broker). Gotcha: installation tokens don't work for ghcr.io.
@@ -536,7 +537,7 @@ not silence:
 | 16 | Env var + `--add-dir` baked into image | docs-verified requirement; no bare-launch path |
 | 17 | `--add-dir` ONLY read-only tiers; `/team` = additionalDirectories | file-access-only mount can't inject instructions (finding #2) |
 | 18 | Agent network `internal: true` + egress firewall | HTTPS_PROXY is advisory; L3 block is what makes §7 true (finding #1) |
-| 19 | Instructions installed at provision from protected repo (option B, default) | standard `~/.claude` load paths; no env-var machinery; snapshot-at-start containment |
+| 19 | Instructions installed at provision from protected repo (option A, default) | standard `~/.claude` load paths; no env-var machinery; snapshot-at-start containment |
 | 20 | `DOCKER-USER` chain for interim egress rules | ufw is bypassed by Docker's NAT; DOCKER-USER is the chain Docker honours |
 | 21 | Stitched session log becomes a CI artifact in git mode | no agent ever writes the combined view; hooks path baked in image for local mode |
 | 22 | One agent-vault vault per agent | vault-scoped tokens select per-vault creds for the same host — verified 2026-08-03; closes finding #4 |

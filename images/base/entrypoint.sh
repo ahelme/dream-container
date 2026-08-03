@@ -24,7 +24,7 @@ if [[ -f /run/secrets/project.env ]]; then
   set +a
 fi
 
-# --- Instructions install at provision time (ARCHITECTURE §4, option B) ------
+# --- Instructions install at provision time (ARCHITECTURE §4, option A) ------
 # Pull the team's instruction tier (CLAUDE.md + skills) from a protected,
 # read-only-to-agents repo at a pinned ref, and install it into Claude Code's
 # STANDARD user-level load paths. No --add-dir, no env-var dependency, and
