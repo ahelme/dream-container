@@ -1,0 +1,78 @@
+# 💭 DreamContainer — per-project agent compose template
+#
+# Stamped into ~/dream/<project>/docker-compose.yml by `dream new`.
+# One agent container per project; all knobs live in the sibling .env.
+# See docs/ARCHITECTURE.md §4 (runtime) and §10 (RAM budget).
+
+name: ${PROJECT_NAME}
+
+services:
+  agent:
+    image: ${DREAM_IMAGE:-ghcr.io/ahelme/dream-container:latest}
+    container_name: ${PROJECT_NAME}-agent
+
+    # --- RAM discipline: default-on, never optional -------------------------
+    mem_limit: ${AGENT_MEM_LIMIT:-3g}
+    memswap_limit: ${AGENT_MEMSWAP_LIMIT:-4g}
+    pids_limit: ${AGENT_PIDS_LIMIT:-512}
+    cpus: ${AGENT_CPUS:-2}
+    shm_size: ${AGENT_SHM_SIZE:-64m}      # dream new --browser sets 1g
+
+    environment:
+      # V8 heap capped below the cgroup ceiling → GC instead of OOM-kill
+      NODE_OPTIONS: "--max-old-space-size=${AGENT_NODE_HEAP_MB:-2048}"
+      GIT_USER_NAME: ${GIT_USER_NAME:-}
+      GIT_USER_EMAIL: ${GIT_USER_EMAIL:-}
+      # GitHub auth, token-first (fine-grained PAT scoped to THIS project's
+      # repos — or a placeholder value when the credential proxy is on).
+      GH_TOKEN: ${GH_TOKEN:-}
+      # Credential proxy (agent-vault / Infisical Agent Proxy) — optional.
+      # When set, real credentials never enter this container; see §7.
+      HTTPS_PROXY: ${DREAM_CRED_PROXY:-}
+      HTTP_PROXY: ${DREAM_CRED_PROXY:-}
+      NO_PROXY: ${DREAM_CRED_PROXY_NOPROXY:-localhost,127.0.0.1}
+      # Team chat transport (DreamTeams plugins read these)
+      MATTERMOST_URL: ${MATTERMOST_URL:-}
+      MATTERMOST_TOKEN: ${MATTERMOST_TOKEN:-}
+      MATTERMOST_CHANNEL_ID: ${MATTERMOST_CHANNEL_ID:-}
+
+    volumes:
+      # Persistent auth + config — THE rebuild-survival story
+      - claude-config:/home/agent/.claude
+      - gh-config:/home/agent/.config/gh
+      # The project itself
+      - workspace:/workspace
+      # DreamTeams wiring (git-mediated; see ARCHITECTURE §5). Optional —
+      # solo projects simply leave these volumes empty.
+      - team:/team
+      - team-system:/team-system:ro
+      # Broker-rendered secrets file (host tmpfs → ro file, not env vars)
+      - ${DREAM_SECRETS_FILE:-/dev/null}:/run/secrets/project.env:ro
+      # Credential-proxy CA (only when DREAM_CRED_PROXY is set)
+      - ${DREAM_CRED_PROXY_CA:-/dev/null}:/run/dream/proxy-ca.crt:ro
+
+    # No docker socket. No DinD. No added capabilities. Ever. (§2)
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    networks:
+      - dream-agents
+
+    init: true
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+volumes:
+  claude-config:
+  gh-config:
+  workspace:
+  team:
+  team-system:
+
+networks:
+  dream-agents:
+    name: ${DREAM_AGENT_NETWORK:-dream-agents}
+    external: ${DREAM_AGENT_NETWORK_EXTERNAL:-false}
