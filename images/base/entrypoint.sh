@@ -24,6 +24,24 @@ if [[ -f /run/secrets/project.env ]]; then
   set +a
 fi
 
+# --- /team file access WITHOUT instruction loading (ARCHITECTURE §4/§5) ------
+# The read-write teams surface is reachable for file ops but must NEVER load
+# CLAUDE.md/skills as instructions (that's the read-only PR-gated tier's job).
+# permissions.additionalDirectories grants access only — never config — which
+# is exactly the guarantee we want here. Seed it if the operator hasn't set
+# their own settings.json (their file, mounted from the system repo, wins).
+SETTINGS="$CLAUDE_CONFIG_DIR/settings.json"
+if [[ -d /team && -n "$(ls -A /team 2>/dev/null)" && ! -f "$SETTINGS" ]]; then
+  mkdir -p "$CLAUDE_CONFIG_DIR"
+  cat > "$SETTINGS" <<'JSON'
+{
+  "permissions": {
+    "additionalDirectories": ["/team"]
+  }
+}
+JSON
+fi
+
 # --- Git identity (from .env, optional) -------------------------------------
 if [[ -n "${GIT_USER_NAME:-}" ]]; then
   git config --global user.name  "$GIT_USER_NAME"  || true

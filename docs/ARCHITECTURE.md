@@ -24,8 +24,13 @@ deliberately does not.
    agents under one Unix user in one shared environment.)
 2. **RAM frugality** — Claude Code is a Node process that comfortably sits at
    0.5–1.5 GB per active session. That is the floor; everything around it
-   must be lean. A 4 GB VPS should run 2–3 concurrently *active* agents plus
-   several idle ones; 8–16 GB is "many agents" territory.
+   must be lean. Honest sizing (review finding #11): **4 GB ≈ 2 active
+   agents with chat off-box** (or a single active agent alongside a
+   local Mattermost + Postgres), leaning on swap for idle sessions;
+   "many agents" is genuinely 8–16 GB. The default `mem_limit: 3g` is a
+   *ceiling* per container, not a reservation — real steady-state is far
+   lower and idle agents swap out — but do not read 3g × N as the required
+   RAM; size limits per tier and expect swap to carry idle load.
 3. **Zero-ritual ergonomics** — every "remember to…" becomes a property the
    container simply has. Persistent auth, team context, launch flags: baked
    in, not remembered.
@@ -48,6 +53,15 @@ Consequences:
   input must not hold secrets** (see §6–7).
 - Agent containers reach the privileged zone only through narrow,
   authenticated HTTP interfaces (deploy webhook, credential proxy, chat).
+- **`HTTPS_PROXY` is advisory — a compromised agent can ignore it.** The
+  egress allowlist and the "nothing to exfiltrate" property (§7) therefore
+  hold *only* when direct outbound is blocked at the network layer. The
+  agent Docker network MUST be `internal: true` (plus a DNS/forward-proxy
+  sidecar for the traffic that is allowed) or firewalled at the host so the
+  credential proxy, deployer, and chat are the *only* reachable
+  destinations. This is a hard requirement of the security model, not an
+  optimization. (Enforced from milestone 2, when those sidecars exist; until
+  then a host nftables/ufw rule on the agent subnet is the interim control.)
 
 > **⚠️ One box, one trust level.** This architecture assumes the host serves
 > a single trust level. Running production workloads on the same box as
@@ -89,8 +103,13 @@ Consequences:
   Opt-in per project, never default.
 
 Multi-arch (arm64 + amd64) via `docker buildx bake`, published to GHCR by CI,
-**rebuilt weekly** so security patches arrive automatically. All state lives
-in volumes, so rebuilds are painless — that *is* the persistent-auth story.
+**rebuilt weekly**. All state lives in volumes, so rebuilds are painless —
+that *is* the persistent-auth story. But note (review finding #15): a weekly
+*rebuild* only patches a *running* agent when its container is recreated —
+**patches land at the next `dream refresh`**, not automatically. Pull auth
+for GHCR is its own gotcha: fine-grained PATs and App installation tokens are
+both rejected by GHCR; either publish the images **public** (simplest, and
+they carry no secrets) or give the host a classic PAT with `read:packages`.
 
 Because every agent container shares one base image, shared libraries land in
 the host page cache once, not N times.
@@ -112,11 +131,24 @@ depth-counting is gone.
 ### Baked-in launch semantics
 
 The image's entrypoint exports `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`
-and the `claude` launch wrapper always passes `--add-dir /team --add-dir
-/team-system`. **There is no bare-launch path**: the docs-verified requirement
-(both the env var *and* `--add-dir` are needed for shared CLAUDE.md loading;
-`permissions.additionalDirectories` grants file access only, never config)
-is satisfied by construction. The container *is* the launch alias.
+and the `claude` launch wrapper always passes `--add-dir` for the
+**read-only, PR-gated instruction tiers only** (`/team-system`,
+`/team-skills`). **There is no bare-launch path**: the docs-verified
+requirement (both the env var *and* `--add-dir` are needed for shared
+CLAUDE.md loading) is satisfied by construction. The container *is* the
+launch alias.
+
+> **⚠️ Never `--add-dir /team` (review finding #2).** `--add-dir` loads
+> `CLAUDE.md`, skills, and rules *as instructions*. The teams repo is
+> read-write for every agent, so if it were `--add-dir`'d a compromised
+> agent could write `/team/CLAUDE.md` and inject every teammate — including
+> the coach — bypassing the whole skills-review gate. Instead, the
+> collaboration surface gets **file access only** via
+> `permissions.additionalDirectories: ["/team"]` in settings.json (which the
+> earlier docs check confirmed grants access but *never* loads config). The
+> entrypoint seeds exactly this when no operator settings.json is present.
+> Instructions come only from the read-only tiers an agent cannot publish to
+> unreviewed.
 
 tmux runs as the session harness so SSH disconnects never kill an agent.
 
@@ -166,12 +198,36 @@ Rationale:
   the secrets broker, can't write the system tier. It reviews diffs **as
   data, never as instructions**, against a structured checklist. A fooled
   coach has a small, fully revertable blast radius.
+  - ⚠️ **The coach is itself an injection target** (review finding #7): it
+    reads untrusted PR content while holding a merge-capable credential, and
+    "reviews as data" is an aspiration with no hard enforcement. Two
+    mitigations make the residual risk small: (a) put the coach's merge
+    credential behind agent-vault so it's abuse-scoped and audited, and
+    (b) a **human-visible merge delay** — the coach *approves*, the merge is
+    announced to team chat and takes effect after N hours unless a human
+    vetoes. Revert undoes the file, but not actions agents took while a
+    poisoned skill was live, so the delay (not just revertability) is what
+    actually contains a fooled coach.
 - **Skills are prose; hooks/tools/settings are code.** Code executes with
   the agent's (or deployer's) privileges, so the executable tier stays
   human-merge-only.
 - The **deployer executes only from the system repo's main** at a pinned
   ref — a rogue scripts-team agent can propose a malicious deploy script but
   never get it executed without a human merge in between.
+- **Write path to a read-only tier** (review finding #13): `/team-system`
+  and `/team-skills` are mounted read-only precisely so an agent can't edit
+  them in place. Scripts-team / skill authors therefore work on a **separate
+  clone in `/workspace`** using a distinct write-scoped PAT, push a branch,
+  and open a PR — the read-only mount is for *loading* the current guardrails
+  as instructions, never for editing them.
+- **Attribution is evidence, not authentication** (review finding #14): git
+  author/committer fields are self-declared, and on a single GitHub account
+  (lowest paid tier) every agent's PAT authenticates as the same user — so
+  teams-repo history localizes *what* changed and is one-command revertable,
+  but must not be trusted to prove *which agent* did it. For real per-agent
+  authentication, give agents distinct machine accounts or commit-signing
+  keys (a later enhancement; Buzz's per-agent Nostr identities, §9, point the
+  same way).
 - Merge-friendly conventions in the teams repo: per-agent/per-team files,
   append-oriented logs, `git pull --rebase` folded into the resume-context /
   handover rituals, and a `CONVENTIONS.md` stating the two rules: *you own
@@ -208,29 +264,48 @@ One `infisical agent` daemon **on the host** (never in agent containers),
 run by systemd:
 
 - Bootstrap credential supplied via `LoadCredentialEncrypted=` from a
-  **systemd-creds**-encrypted blob (AES-256-GCM, machine-bound — a stolen
-  disk image cannot decrypt it elsewhere; zero passphrases, survives
-  unattended reboots).
-- `remove_client_secret_on_read: true` — the client secret exists on disk
-  for milliseconds at boot, then the daemon holds only a renewable token in
-  memory. **The machine identity never enters any agent container.**
+  **systemd-creds**-encrypted blob (AES-256-GCM; zero passphrases, survives
+  unattended reboots). **Disk-theft resistance depends on a TPM** (review
+  finding #3): with `--with-key=tpm2`/`host+tpm2` the blob is bound to
+  hardware and a stolen disk image cannot decrypt it; *without* a (v)TPM the
+  host key lives at `/var/lib/systemd/credential.secret` on the same disk,
+  so it protects against file-level leaks but **not** a full disk-image
+  theft. Run `systemd-creds has-tpm2` first; many budget VPSes have none.
+- The daemon holds only a renewable token in memory after first auth; **the
+  machine identity never enters any agent container.** (Note: under
+  `LoadCredentialEncrypted=` the decrypted secret is a read-only ramfs file
+  that never touches disk, so `remove_client_secret_on_read` is redundant
+  there — see finding #10; use it only if the secret is delivered by some
+  other path the agent can actually unlink.)
 - Renders each project's secrets into a per-project **tmpfs** file, mounted
   read-only into that project's container as a *file* (`/run/secrets/…`),
   not env vars — env vars leak via `/proc/self/environ`, `docker inspect`,
   and crash dumps.
 
-**Bootstrap delivery** (new project, laptop → VPS): create an Infisical
-**share link** (1 view, 5-minute expiry), `curl` it once on the VPS, pipe
-straight into `systemd-creds encrypt`. The secret never touches shell
-history, chat logs, or a synced password manager.
+**Bootstrap delivery** (new project, laptop → VPS): get the machine-identity
+client secret onto the VPS once, without it landing in shell history, chat,
+or a synced password manager. ⚠️ **Not via `curl` of a share link**
+(finding #9): Infisical share links serve the web app and decrypt
+client-side (key material rides in the URL fragment, never reaching the
+server), so `curl` returns HTML, not the secret — and would burn the single
+view. Two paths that actually work: (a) paste over an SSH session straight
+into `systemd-creds encrypt --name=… - /path/to.cred` reading stdin; or
+(b) fetch via the authenticated Infisical CLI/API on the VPS. The share link
+remains fine for *human* eyes-on delivery, just not for piping.
 
 ## 7. Credential proxy (agent-vault)
 
 For the highest-value credentials (GitHub, Anthropic), agents hold only
 **placeholder strings**; [Infisical agent-vault](https://github.com/Infisical/agent-vault)
 (single Go binary, MITM forward proxy) injects real values at the network
-boundary. This is the only layer that defends against a *fully compromised*
-agent exfiltrating a credential — there is nothing to exfiltrate.
+boundary. It **prevents credential *exfiltration*, not credential *abuse***
+(review finding #5): a compromised agent still can't steal the token to use
+off-box, but it *can* wield it through the proxy for as long as it holds a
+session — push poisoned commits, delete branches, burn Anthropic quota. So
+this pairs with tight PAT scopes, proxy-side audit logs, and rate limits; it
+is one defense, not the whole story. It also depends absolutely on the L3
+egress block (§2) — without it, placeholders don't matter because the agent
+just connects out directly.
 
 - **Git-over-HTTPS: verified working** (2026-08-02, empirically, v0.39.x
   source build). Mechanism: a service rule `auth: {type: basic, username:
@@ -239,6 +314,17 @@ agent exfiltrating a credential — there is nothing to exfiltrate.
   vault. (Placeholder *substitution* would not work for git — the dummy is
   invisible inside base64 — so use the `basic` auth rule, not substitutions.)
   Git needs no credentials configured at all.
+- **⚠️ Per-agent credential mapping is NOT yet verified** (review finding #4,
+  blocking for M2). The tested rule maps *upstream host → one credential*, so
+  as described every agent proxying to `github.com` would get the *same*
+  injected PAT — collapsing the §5 per-agent write tiers into one identity.
+  agent-vault has per-container **vault-scoped session tokens** and
+  multi-tenancy that should allow distinct credentials per agent, but that
+  the single verified rule does *not* demonstrate. **Before M2: prove one
+  agent-vault instance can inject different GitHub credentials for different
+  container session tokens.** Until then, per-agent GitHub scoping relies on
+  the PAT delivered directly to the container (broker path, §6), not the
+  proxy.
 - Containers trust the proxy CA (`agent-vault ca` export; `GIT_SSL_CAINFO` /
   system trust store).
 - `unmatched_host_policy=deny` doubles as the **egress allowlist** — the
@@ -249,6 +335,15 @@ agent exfiltrating a credential — there is nothing to exfiltrate.
   `:14322` (proxy) reachable from the agent network, `:14321` (management)
   loopback-only. Its docs want a separate host — honoured when the second
   server arrives (§2).
+- **Anthropic auth is the exception to "placeholders only"** (review
+  finding #6): the persistent `~/.claude` volume that gives us rebuild-proof
+  auth also means Claude Code's OAuth/session tokens live *inside* the
+  semi-trusted container, where the L3 egress block (§2) is what stops them
+  leaving — the proxy can't broker what's already resident. If that residual
+  risk matters for a given agent, use **API-key auth injected by the vault**
+  instead of the persistent OAuth volume (no in-container token, at the cost
+  of the convenient login flow). Pick per agent; don't pretend the OAuth
+  volume is placeholder-only.
 - **Risk posture:** pre-1.0, four months old. Pin the version; treat as a
   hardening layer over a design that is already sound without it (§6 works
   alone). Compatible by construction with Infisical's commercial **Agent
@@ -266,10 +361,14 @@ Agents never run Docker. The deploy path:
 2. Webhook fires (per-project **HMAC secret**), or `dream deploy` posts to
    the deployer with the same auth.
 3. The deployer — the only Docker-daemon client besides the owner — checks
-   out the project, **policy-checks the compose file** (~40 lines: reject
-   privileged, host network/PID/IPC, added capabilities, bind mounts outside
-   the project dir, docker socket), layers on a resource-limit override file
-   the project cannot opt out of, and runs
+   out the project, **policy-checks the compose file with an *allowlist*
+   schema** (review finding #8: a blocklist is bypassable — e.g. a named
+   volume with `driver_opts: {type: none, o: bind, device: /var/run/…}` is a
+   host bind mount that a "no privileged / no host bind" blocklist misses;
+   `devices:`, `sysctls`, `extends`, build-context escapes are similar gaps).
+   Only a known-safe set of compose keys is permitted; anything unrecognized
+   is rejected. The deployer then layers on a resource-limit override file
+   the project cannot opt out of and runs
    `docker compose -p <project>-test up -d --build` in the project's slot.
 4. Exposure only via shared **Caddy**: `<project>.test.<domain>` with basic
    auth; nothing binds host ports directly.
@@ -313,7 +412,37 @@ What v2 removed from v1's per-project bill: per-project Postgres + Redis +
 API + frontend containers, Chrome + 2 GB shm in every image, docker-in-docker
 daemons, `SYS_ADMIN`/`NET_ADMIN` capabilities.
 
-## 11. Milestones
+## 11. Operations (review finding #12)
+
+The privileged zone has single points of failure that need an explicit story,
+not silence:
+
+- **Broker (`infisical agent`) and credential proxy are SPOFs.** When the
+  proxy is down, all agent git/API traffic stops; when the broker dies, the
+  tmpfs-rendered secrets vanish on restart. Both run under **systemd with
+  `Restart=on-failure`** (broker) / a **compose `restart: unless-stopped`
+  + healthcheck** (proxy), and agents fail *closed* (no traffic) rather than
+  open. Secrets re-render on broker restart, so an agent that started mid-
+  outage picks them up on its next container start or a re-run of the render.
+- **Healthchecks** on broker, proxy, deployer, Postgres, Mattermost — a dead
+  dependency should surface, not silently degrade.
+- **Backups**, with a concrete target list: the `claude-config` and
+  `workspace` volumes per project, the shared Postgres, Mattermost's data,
+  agent-vault's SQLite/Postgres store, and the host's `systemd-creds`
+  material + `/etc/dreamcontainer` config. (The `backup-check` skill in
+  DreamTeams already models "verify real backups vs live data.")
+- **Log rotation** for the proxy's request log and per-project agent logs
+  (`docker` json-file driver with `max-size`/`max-file`, set in the compose
+  template's `logging:` block — a good M2 addition).
+- **Patching reaches containers only on recreate.** The weekly GHCR rebuild
+  is inert until `dream refresh <project>` pulls and recreates — schedule a
+  refresh cadence (a host cron running `dream refresh` across projects) so
+  "rebuilt weekly" actually means "patched weekly."
+- **Monitoring/alerting**: the DreamTeams ops skills (`health-check`,
+  `monitoring-check`, Grafana/Loki/Prometheus) are the intended surface; wire
+  the broker/proxy/deployer health into them in M2.
+
+## 12. Milestones
 
 - **M1 — the runtime** *(this repo, now)*: base + browser images, compose
   template with default-on limits, `dream` CLI (`new` / `ls` / `shell` /
@@ -326,7 +455,7 @@ daemons, `SYS_ADMIN`/`NET_ADMIN` capabilities.
   core; integration = a documented compose-network convention), GitHub App
   migration, second-server split runbook.
 
-## 12. Decision log (terse)
+## 13. Decision log (terse)
 
 | # | Decision | Why |
 |---|---|---|
@@ -346,3 +475,34 @@ daemons, `SYS_ADMIN`/`NET_ADMIN` capabilities.
 | 14 | Mattermost M1, Buzz M2 | working default first; transport is a plugin |
 | 15 | Per-agent session logs + stitcher | kills prepend contention; git-mode conflict-free |
 | 16 | Env var + `--add-dir` baked into image | docs-verified requirement; no bare-launch path |
+| 17 | `--add-dir` ONLY read-only tiers; `/team` = additionalDirectories | file-access-only mount can't inject instructions (finding #2) |
+| 18 | Agent network `internal: true` + egress firewall | HTTPS_PROXY is advisory; L3 block is what makes §7 true (finding #1) |
+
+## 14. Adversarial review ledger (2026-08-02)
+
+A Fable agent reviewed this doc adversarially. Verdict: sound design, but the
+security story rested on unstated assumptions. Status of each finding:
+
+| # | Sev | Finding | Status |
+|---|---|---|---|
+| 1 | HIGH | `HTTPS_PROXY` advisory → agent bypasses egress/exfil controls | **Fixed**: §2 hard requirement + compose `internal:true` note + interim host firewall |
+| 2 | HIGH | `/team` rw + `--add-dir` = review-bypassing injection channel | **Fixed in code + doc**: wrapper `--add-dir`s read-only tiers only; `/team` via `additionalDirectories` (file access only); entrypoint seeds it |
+| 3 | HIGH | systemd-creds "machine-bound" only with TPM | **Fixed**: §6 caveat + `has-tpm2` check |
+| 4 | HIGH | agent-vault host-rule → one PAT for all agents, collapses tiers | **Open, flagged blocking for M2**: verify per-container credential mapping before relying on the proxy for per-agent scoping |
+| 5 | HIGH | "nothing to exfiltrate" defends theft not abuse | **Fixed**: §7 reworded (exfiltration ≠ abuse) + scopes/logs/rate-limits |
+| 6 | MED | persistent `~/.claude` = Anthropic tokens in-container | **Fixed**: §7 honest note + API-key-via-vault option |
+| 7 | MED | coach reads untrusted input while holding merge cred | **Fixed**: §5 vault-scoped cred + human-visible merge delay |
+| 8 | MED | compose blocklist bypassable | **Fixed**: §8 switched to allowlist schema |
+| 9 | MED | share-link `curl` bootstrap won't work | **Fixed**: §6 replaced with SSH-stdin / authenticated CLI |
+| 10 | MED | `remove_client_secret_on_read` clashes with ramfs | **Fixed**: §6 note (redundant under `LoadCredentialEncrypted=`) |
+| 11 | MED | 4 GB RAM claim doesn't add up | **Fixed**: §1 honest sizing (4 GB ≈ 2 agents, chat off-box) |
+| 12 | MED | no ops story (SPOF, backup, rotation, patch delivery) | **Fixed**: new §11 Operations |
+| 13 | MED | `/team-system` ro but §5 says scripts-team writes it | **Fixed**: §5 explicit separate-clone write path |
+| 14 | LOW | git attribution forgeable; one account = one identity | **Fixed**: §5 "evidence not authentication" note |
+| 15 | LOW | GHCR rejects fine-grained PATs; "weekly patch" overclaim | **Fixed**: §4 public-image / classic-PAT + "patched at refresh" |
+
+Findings 1–3, 5–15 addressed in this commit. **Finding 4 is the one open
+blocker**: it needs an empirical test (distinct GitHub credentials per
+container session token through one agent-vault) before M2 leans on the proxy
+for per-agent write-tier enforcement — until then, per-agent GitHub scoping
+comes from the broker-delivered PAT, not the proxy.

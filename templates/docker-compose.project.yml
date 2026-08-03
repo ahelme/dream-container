@@ -44,8 +44,12 @@ services:
       - workspace:/workspace
       # DreamTeams wiring (git-mediated; see ARCHITECTURE §5). Optional —
       # solo projects simply leave these volumes empty.
+      #   team         rw data surface — file access only, never --add-dir'd
+      #   team-system  ro guardrails (hooks/agent_tools/settings) → instructions
+      #   team-skills  ro, PR-gated skills (coach-merged)          → instructions
       - team:/team
       - team-system:/team-system:ro
+      - team-skills:/team-skills:ro
       # Broker-rendered secrets file (host tmpfs → ro file, not env vars)
       - ${DREAM_SECRETS_FILE:-/dev/null}:/run/secrets/project.env:ro
       # Credential-proxy CA (only when DREAM_CRED_PROXY is set)
@@ -71,8 +75,23 @@ volumes:
   workspace:
   team:
   team-system:
+  team-skills:
 
+# ⚠️ SECURITY (ARCHITECTURE §2, review finding #1): HTTPS_PROXY is ADVISORY —
+# a prompt-injected agent can ignore it and connect out directly, exfiltrating
+# secrets and tokens, UNLESS the network denies direct egress at L3. The
+# credential proxy / egress allowlist only works if this is enforced.
+#
+# `internal: true` cuts ALL outbound from agent containers except to other
+# containers on this network — so the credential proxy, deployer, chat, and a
+# DNS/forward-proxy sidecar become the ONLY ways out. That is the intended
+# posture for a hardened multi-agent host. It is commented here because it
+# requires those sidecars to exist (milestone 2); turn it on with them.
+#
+# Until then, the weaker fallback is a host firewall (nftables/ufw) allowing
+# egress from the dream-agents subnet only to the proxy + GitHub + Anthropic.
 networks:
   dream-agents:
     name: ${DREAM_AGENT_NETWORK:-dream-agents}
     external: ${DREAM_AGENT_NETWORK_EXTERNAL:-false}
+    # internal: true          # ← enable with the M2 proxy/deployer sidecars
