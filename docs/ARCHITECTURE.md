@@ -501,6 +501,21 @@ not silence:
 - **Monitoring/alerting**: the DreamTeams ops skills (`health-check`,
   `monitoring-check`, Grafana/Loki/Prometheus) are the intended surface; wire
   the broker/proxy/deployer health into them in M2.
+- **Commit signatures (decision #23).** On the VPS, agent commits will show
+  **Unverified** on GitHub unless each agent holds an SSH signing key
+  registered to a GitHub account — which means either per-agent bot accounts
+  (heavy, and each key is a credential to protect) or one shared key
+  (credential sharing across containers; exactly what the vault design
+  forbids). The team invariant is therefore *attribution*, not verification:
+  correct `user.name`/`user.email` per agent, `Co-Authored-By` trailers
+  mapping to real humans. Consequences to enforce: (1) never enable "require
+  signed commits" branch protection on agent branches — pushes would be
+  rejected, not merely badged; (2) operators with GitHub vigilant mode ON
+  must not lend their email to agent commits, or every agent commit is
+  flagged; (3) if verified badges matter for compliance, route merges through
+  the deployer using the GitHub API (squash/merge commits created server-side
+  are signed by GitHub itself) — verification then attaches at the merge
+  boundary, where the policy gate already lives, not in every container.
 
 ## 12. Milestones
 
@@ -540,6 +555,8 @@ not silence:
 | 19 | Instructions installed at provision from protected repo (option A, default) | standard `~/.claude` load paths; no env-var machinery; snapshot-at-start containment |
 | 20 | `DOCKER-USER` chain for interim egress rules | ufw is bypassed by Docker's NAT; DOCKER-USER is the chain Docker honours |
 | 21 | Stitched session log becomes a CI artifact in git mode | no agent ever writes the combined view; hooks path baked in image for local mode |
+| 22 | Team config is one committed `team.yaml` (Agents Graph); YAML over JSON | comments are load-bearing, hand-edited between scaffolds, diffs read in PRs; web form + CLI both emit/consume it |
+| 23 | Agent commits are attributed, not signed; "Verified" is not a team invariant | signing keys are per-GitHub-account secrets — mounting one into N agent containers is credential sharing; branch protection must not require signed commits on agent branches |
 | 22 | One agent-vault vault per agent | vault-scoped tokens select per-vault creds for the same host — verified 2026-08-03; closes finding #4 |
 
 ## 14. Adversarial review ledger (2026-08-02)
