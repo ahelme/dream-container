@@ -3,6 +3,8 @@
 # VERSION: 0.1.0  (DreamContainer v2, milestone 1)
 #
 #   dream new <project> [--repo URL] [--browser] [--team URL] [--system URL]
+#   dream fleet <team.yaml> [--team URL] [--browser] [--dry-run]
+#                                  provision one agent container per team.yaml agent
 #   dream ls
 #   dream shell <project>          open a Claude-ready shell in the agent
 #   dream claude <project>         launch Claude Code directly (team-wired)
@@ -88,12 +90,108 @@ cmd_new() {
   fi
 
   ok "created $d"
+  [[ "${FLEET_QUIET:-0}" == 1 ]] && return 0
   note "next:"
   note "  1. edit $d/.env — set GH_TOKEN (a fine-grained PAT scoped to this project)"
   note "     bootstrap tip: deliver it via an Infisical share link (1 view, 5 min),"
   note "     curl it on the host, never paste into shell history. (ARCHITECTURE §6)"
   note "  2. dream up $name        # start the agent"
   note "  3. dream shell $name     # hop in; run: claude"
+}
+
+# dream fleet team.yaml — the org graph provisions the whole team.
+# One project per agent, named <project>-<agent>, each stamped with its
+# AGENT_* identity from the YAML. team.yaml format: DreamTeams
+# docs/TEAM-GRAPH-SCHEMA.md (write one with the Agents Graph configurator).
+cmd_fleet() {
+  local file="${1:-}"; shift || true
+  [[ -f "${file:-}" ]] || die "usage: dream fleet <team.yaml> [--team URL] [--browser] [--dry-run]"
+  need python3
+
+  local team="" browser=0 dry=0
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --team)    team="$2"; shift 2 ;;
+      --browser) browser=1; shift ;;
+      --dry-run) dry=1; shift ;;
+      *) die "unknown option: $1" ;;
+    esac
+  done
+
+  # Validate first when the team-graph CLI is around (it ships in DreamTeams).
+  if command -v team-graph >/dev/null 2>&1; then
+    team-graph validate "$file" || die "team.yaml failed validation"
+  else
+    note "team-graph not on PATH — provisioning without full validation"
+  fi
+
+  # Parse the org graph into tab-separated lines we can consume in bash.
+  local plan
+  plan="$(python3 - "$file" <<'PY'
+import sys
+try:
+    import yaml
+except ImportError:
+    print("PYYAML_MISSING"); sys.exit(0)
+cfg = yaml.safe_load(open(sys.argv[1])) or {}
+p = cfg.get("project") or {}
+print("\t".join(["project", p.get("name") or "", p.get("repo") or ""]))
+for a in cfg.get("agents") or []:
+    g = a.get("git") or {}
+    print("\t".join(["agent", a.get("name") or "", a.get("role") or "agent",
+                     a.get("permissions") or "default",
+                     g.get("branch_pattern") or "", g.get("rotation") or ""]))
+PY
+)" || die "could not parse $file"
+  [[ "$plan" == PYYAML_MISSING* ]] && die "dream fleet needs PyYAML: pip install pyyaml"
+
+  local pname="" prepo="" prepo_url=""
+  local -a rows=()
+  while IFS=$'\t' read -r kind f1 f2 f3 f4 f5; do
+    case "$kind" in
+      project) pname="$f1"; prepo="$f2" ;;
+      agent)   rows+=("$f1"$'\t'"$f2"$'\t'"$f3"$'\t'"$f4"$'\t'"$f5") ;;
+    esac
+  done <<< "$plan"
+  [[ -n "$pname" ]] || die "team.yaml has no project.name"
+  [[ ${#rows[@]} -gt 0 ]] || die "team.yaml declares no agents"
+  # owner/repo shorthand → clone URL; full URLs pass through untouched
+  if [[ -n "$prepo" ]]; then
+    case "$prepo" in
+      http*|git@*) prepo_url="$prepo" ;;
+      */*)         prepo_url="https://github.com/${prepo}.git" ;;
+    esac
+  fi
+
+  info "fleet: $pname — ${#rows[@]} agents$( [[ -n "$prepo_url" ]] && echo " · repo $prepo_url" )"
+  local aname arole aperm abranch arot proj
+  for row in "${rows[@]}"; do
+    IFS=$'\t' read -r aname arole aperm abranch arot <<< "$row"
+    proj="${pname}-${aname}"
+    [[ "$proj" =~ ^[a-z0-9][a-z0-9-]*$ ]] || die "bad project name '$proj' (team.yaml names must be lowercase alphanumeric/hyphen)"
+    if [[ "$dry" == 1 ]]; then
+      printf '  %-28s role=%-10s perms=%-9s branch=%s\n' "$proj" "$arole" "$aperm" "$abranch"
+      continue
+    fi
+    FLEET_QUIET=1 cmd_new "$proj" \
+      $( [[ -n "$prepo_url" ]] && echo --repo "$prepo_url" ) \
+      $( [[ -n "$team" ]] && echo --team "$team" ) \
+      $( [[ "$browser" == 1 ]] && echo --browser )
+    local d; d="$(project_dir "$proj")"
+    _set_env "$d/.env" AGENT_NAME "$aname"
+    _set_env "$d/.env" AGENT_ROLE "$arole"
+    _set_env "$d/.env" AGENT_PERMISSIONS "$aperm"
+    _set_env "$d/.env" AGENT_BRANCH_PATTERN "$abranch"
+  done
+  [[ "$dry" == 1 ]] && { ok "dry run — nothing created"; return 0; }
+
+  ok "fleet provisioned: ${#rows[@]} agent containers"
+  note "next, for EACH agent (or script it):"
+  note "  1. edit \$DREAM_HOME/${pname}-<agent>/.env — set GH_TOKEN (per-agent PAT,"
+  note "     or point at the credential proxy; never share one token across agents)"
+  note "  2. dream up ${pname}-<agent>"
+  note "identity: containers get AGENT_NAME/ROLE/PERMISSIONS/BRANCH_PATTERN from"
+  note "team.yaml — DreamTeams team-detect picks the matching chat profile."
 }
 
 # _set_env FILE KEY VALUE — replace a KEY=... line in place (portable sed).
@@ -181,6 +279,7 @@ main() {
   local cmd="${1:-}"; shift || true
   case "$cmd" in
     new)     cmd_new "$@" ;;
+    fleet)   cmd_fleet "$@" ;;
     up)      cmd_up "$@" ;;
     down)    cmd_down "$@" ;;
     ls|list) cmd_ls "$@" ;;

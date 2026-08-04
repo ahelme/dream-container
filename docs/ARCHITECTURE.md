@@ -557,6 +557,7 @@ not silence:
 | 21 | Stitched session log becomes a CI artifact in git mode | no agent ever writes the combined view; hooks path baked in image for local mode |
 | 22 | Team config is one committed `team.yaml` (Agents Graph); YAML over JSON | comments are load-bearing, hand-edited between scaffolds, diffs read in PRs; web form + CLI both emit/consume it |
 | 23 | Agent commits are attributed, not signed; "Verified" is not a team invariant | signing keys are per-GitHub-account secrets — mounting one into N agent containers is credential sharing; branch protection must not require signed commits on agent branches |
+| 24 | `dream fleet team.yaml` provisions the org graph | one project per agent named `<project>-<agent>`; AGENT_* identity stamped into env; validates via team-graph when present; per-agent tokens stay per-agent |
 | 22 | One agent-vault vault per agent | vault-scoped tokens select per-vault creds for the same host — verified 2026-08-03; closes finding #4 |
 
 ## 14. Adversarial review ledger (2026-08-02)

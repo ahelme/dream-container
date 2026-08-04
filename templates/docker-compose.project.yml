@@ -38,6 +38,12 @@ services:
       MATTERMOST_URL: ${MATTERMOST_URL:-}
       MATTERMOST_TOKEN: ${MATTERMOST_TOKEN:-}
       MATTERMOST_CHANNEL_ID: ${MATTERMOST_CHANNEL_ID:-}
+      # Agents-graph identity (seeded by `dream fleet` from team.yaml;
+      # DreamTeams team-detect + identity skills read these)
+      AGENT_NAME: ${AGENT_NAME:-}
+      AGENT_ROLE: ${AGENT_ROLE:-}
+      AGENT_PERMISSIONS: ${AGENT_PERMISSIONS:-default}
+      AGENT_BRANCH_PATTERN: ${AGENT_BRANCH_PATTERN:-}
 
     volumes:
       # Persistent auth + config — THE rebuild-survival story

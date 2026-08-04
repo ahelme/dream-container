@@ -73,6 +73,11 @@ dream shell my-api
 
 # browser automation project? add --browser (Chromium + 1g shm)
 dream new my-scraper --repo … --browser
+
+# whole team at once? describe it as a graph, provision the fleet
+# (write team.yaml with the DreamTeams Agents Graph configurator)
+dream fleet team.yaml --dry-run    # see the plan
+dream fleet team.yaml              # one container per agent, identity stamped
 ```
 
 `dream ls` shows every agent and its state; `dream refresh <project>` pulls the
