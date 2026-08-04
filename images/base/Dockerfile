@@ -62,7 +62,7 @@ RUN mkdir -p /opt/npm-global \
 # - the wrapper always passes the team mounts when they exist
 ENV CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 \
     CLAUDE_CONFIG_DIR=/home/agent/.claude \
-    PATH=/opt/npm-global/bin:$PATH
+    PATH=$PATH:/opt/npm-global/bin
 COPY claude-wrapper.sh /usr/local/bin/claude
 COPY entrypoint.sh /usr/local/bin/dream-entrypoint
 # System-wide git hooks path: chains any per-repo hook, then auto-restitches
