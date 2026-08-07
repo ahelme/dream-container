@@ -64,7 +64,7 @@ claude
 
 ### **Dream vs Nightmare**
 
-| **Development Hell** | 💭 **DreamContainer** |
+| **🔥 Development Hell** | 💭 **DreamContainer** |
 |---|---|
 |  Breaks after rebuilds |  Persistent authentication |
 |  Identities and secrets bleed over | Coherent secure agent isolation |
