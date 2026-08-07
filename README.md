@@ -2,16 +2,15 @@
 <img src="docs/static/assets/img/dream_container_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
 </div>
 
+# 💭DreamContainer™️💭
+DreamContainer: the optimised identity-driven multi-architecture isolated agentic development environment of your dreams.
+
 [![GitHub Stars](https://img.shields.io/github/stars/ahelme/dream-container?style=for-the-badge&logo=github)](https://github.com/ahelme/dream-container)
 [![Docker Pulls](https://img.shields.io/docker/pulls/ahelme/dream-container?style=for-the-badge&logo=docker)](https://hub.docker.com/r/ahelme/dream-container)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
-# 💭DreamContainer™️💭
-DreamContainer: the optimised identity-driven multi-architecture agentic .devcontainer of your dreams.
-
-
-## **Not just another devcontainer...**
+## **Not just another agentic graph development environment...**
 
 DreamContainer is the **AI-first development environment you've been dreaming of**.
 
