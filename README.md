@@ -2,14 +2,12 @@
 <img src="docs/static/assets/img/dream_container_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
 </div>
 
-# 💭DreamContainer™️💭
-**Agentic Development Template That Dreams Are Made Of**
-
 [![GitHub Stars](https://img.shields.io/github/stars/ahelme/dream-container?style=for-the-badge&logo=github)](https://github.com/ahelme/dream-container)
 [![Docker Pulls](https://img.shields.io/docker/pulls/ahelme/dream-container?style=for-the-badge&logo=docker)](https://hub.docker.com/r/ahelme/dream-container)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](http://makeapullrequest.com)
 
+# 💭DreamContainer™️💭
 DreamContainer: the optimised identity-driven multi-architecture agentic .devcontainer of your dreams.
 
 
