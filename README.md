@@ -1,5 +1,5 @@
 <div align="center">
-<img src="frontend/static/assets/img/dream_ops_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
+<img src="docs/static/assets/img/dream_container_claude_cloud.png" alt="DreamContainer... transcending bureaucracy." width="400">
 </div>
 
 # 💭DreamContainer™️💭
